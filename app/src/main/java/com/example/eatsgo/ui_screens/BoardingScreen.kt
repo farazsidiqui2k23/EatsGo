@@ -88,7 +88,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
             }
 
             1 -> {
-                currentImage = R.drawable.desifood
+                currentImage = R.drawable.paymentguy
                 cardIcon = R.drawable.payement_icon
                 cardTitle = "Easy Payment"
                 cardDesc = "Payiment is easy, fast, and secure"
