@@ -242,8 +242,8 @@ fun BoardingMenu(
 }
 
 
-@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-@Composable
-fun Ui() {
-    BoardingScr()
-}
+//@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
+//@Composable
+//fun Ui() {
+//    BoardingScr()
+//}
