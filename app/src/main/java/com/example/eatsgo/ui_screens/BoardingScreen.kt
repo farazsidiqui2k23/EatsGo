@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,6 +53,7 @@ import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
+import com.example.eatsgo.ui.theme.Yellow2
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -85,15 +88,15 @@ fun BoardingScr(modifier: Modifier = Modifier) {
             1 -> {
                 currentImage = R.drawable.desifood
                 cardIcon = R.drawable.payement_icon
-                cardTitle = "Easy Payement"
-                cardDesc = ""
+                cardTitle = "Easy Payment"
+                cardDesc = "Payiment is easy, fast, and secure"
                 cardBtnText = "Next"
             }
             2 -> {
                 currentImage = R.drawable.deliveryguy
                 cardIcon = R.drawable.delivery_icon
                 cardTitle = "Fast Delivery"
-                cardDesc = ""
+                cardDesc = "Delivery that is always on time"
                 cardBtnText = "Get Started"
             }
         }
@@ -145,6 +148,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
 
 @Composable
 fun BoardingMenu( currentBoardIndex : Int, iconId : Int, title : String, desc : String, btn_txt : String, onclick : (currentIndex : Int)-> Unit) {
+    val boardingItem = (0..2).toList()
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,16 +181,20 @@ fun BoardingMenu( currentBoardIndex : Int, iconId : Int, title : String, desc : 
                 fontSize = 16.sp, color = Brown, textAlign = TextAlign.Center
             )
 
-            Row(modifier = Modifier.padding(0.dp, 14.dp)) {
+            LazyRow(modifier = Modifier.padding(0.dp, 14.dp)) {
+items(boardingItem){index ->
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .height(8.dp)
+            .width(24.dp)
+            .clip(CircleShape)
+            .background(if (index == currentBoardIndex) OrangeBase else Yellow2)
 
-                Box(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .height(8.dp)
-                        .width(24.dp)
-                        .clip(CircleShape)
-                        .background(OrangeBase)
-                )
+    )
+
+}
+
 
             }
 
