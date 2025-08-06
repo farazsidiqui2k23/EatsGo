@@ -3,6 +3,7 @@ package com.example.eatsgo.ui_screens
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -80,11 +81,12 @@ fun BoardingScr(modifier: Modifier = Modifier) {
         when (currentBoardIndex) {
             0 -> {
                 currentImage = R.drawable.foodorderguy
-            cardIcon = R.drawable.order_icon
+                cardIcon = R.drawable.order_icon
                 cardTitle = "Order For Food"
                 cardDesc = "Heart-healthy meals delivered by hand to your house"
                 cardBtnText = "Next"
             }
+
             1 -> {
                 currentImage = R.drawable.desifood
                 cardIcon = R.drawable.payement_icon
@@ -92,6 +94,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                 cardDesc = "Payiment is easy, fast, and secure"
                 cardBtnText = "Next"
             }
+
             2 -> {
                 currentImage = R.drawable.deliveryguy
                 cardIcon = R.drawable.delivery_icon
@@ -137,7 +140,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                     title = cardTitle,
                     desc = cardDesc,
                     btn_txt = cardBtnText
-                ){index ->
+                ) { index ->
                     currentBoardIndex = index
                 }
 
@@ -147,7 +150,14 @@ fun BoardingScr(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BoardingMenu( currentBoardIndex : Int, iconId : Int, title : String, desc : String, btn_txt : String, onclick : (currentIndex : Int)-> Unit) {
+fun BoardingMenu(
+    currentBoardIndex: Int,
+    iconId: Int,
+    title: String,
+    desc: String,
+    btn_txt: String,
+    onclick: (currentIndex: Int) -> Unit
+) {
     val boardingItem = (0..2).toList()
     Card(
         modifier = Modifier
@@ -182,18 +192,19 @@ fun BoardingMenu( currentBoardIndex : Int, iconId : Int, title : String, desc : 
             )
 
             LazyRow(modifier = Modifier.padding(0.dp, 14.dp)) {
-items(boardingItem){index ->
-    Box(
-        modifier = Modifier
-            .padding(4.dp)
-            .height(8.dp)
-            .width(24.dp)
-            .clip(CircleShape)
-            .background(if (index == currentBoardIndex) OrangeBase else Yellow2)
+                items(boardingItem) { index ->
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .height(8.dp)
+                            .width(24.dp)
+                            .clip(CircleShape)
+                            .background(if (index == currentBoardIndex) OrangeBase else Yellow2)
+                            .clickable { onclick(index) }
 
-    )
+                    )
 
-}
+                }
 
 
             }
@@ -202,9 +213,15 @@ items(boardingItem){index ->
                 onClick = {
 
 
-                    when(currentBoardIndex){
-                        0 -> {onclick(1)}
-                        1 -> {onclick(2)}
+                    when (currentBoardIndex) {
+                        0 -> {
+                            onclick(1)
+                        }
+
+                        1 -> {
+                            onclick(2)
+                        }
+
                         2 -> {}
                     }
 
