@@ -105,7 +105,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
         }
 
         Image(
-            painter = painterResource(id = R.drawable.foodorderguy),
+            painter = painterResource(id = currentImage),
             contentDescription = "",
             contentScale = ContentScale.Fit,
             modifier = Modifier
