@@ -2,13 +2,18 @@ package com.example.eatsgo.ui_screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -22,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -52,9 +58,9 @@ fun BoardingScr(modifier: Modifier = Modifier) {
             contentDescription = "",
             contentScale = ContentScale.Fit,
             modifier = Modifier
-                .padding(0.dp, 160.dp, 0.dp, 0.dp)
+                .padding(0.dp, 130.dp, 0.dp, 0.dp)
                 .fillMaxWidth()
-                .fillMaxHeight(.5f)
+                .fillMaxHeight(.45f)
         )
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -62,7 +68,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp, 20.dp),
+                    .padding(20.dp, 30.dp),
                 contentAlignment = Alignment.TopEnd
             ) {
                 Button(
@@ -86,13 +92,16 @@ fun BoardingMenu() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(.4f),
+            .fillMaxHeight(.48f),
         colors = CardDefaults.cardColors(Cream), shape = RoundedCornerShape(16.dp)
     ) {
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Icon(
                 imageVector = Icons.Default.ShoppingCart,
@@ -109,7 +118,20 @@ fun BoardingMenu() {
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                 fontSize = 16.sp, color = Brown, textAlign = TextAlign.Center
             )
-            Box() { Icon(imageVector = Icons.Default.Star, contentDescription = "") }
+
+            Row(modifier = Modifier.padding(0.dp, 14.dp)) {
+
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .height(8.dp)
+                            .width(24.dp)
+                            .clip(CircleShape)
+                            .background(OrangeBase)
+                    )
+
+            }
+
             Button(
                 onClick = {}, colors = ButtonColors(
                     containerColor = OrangeBase,
@@ -118,7 +140,7 @@ fun BoardingMenu() {
                     disabledContentColor = Color.Transparent,
                 ), modifier = Modifier.fillMaxWidth(.4f)
             ) {
-                Text("Next")
+                Text("Next", fontSize = 14.sp)
             }
 
         }
