@@ -87,12 +87,12 @@ fun Login_Scr(modifier: Modifier = Modifier) {
             .background(YellowBase)
     ) {
         Column(modifier.fillMaxSize()) {
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(.2f)
                     .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                contentAlignment = Alignment.CenterStart
             ) {
                 IconButton(onClick = {}) {
                     Icon(
@@ -102,7 +102,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         tint = OrangeBase
                     )
                 }
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Text(
                         text = heading,
                         fontFamily = FontFamily(Font(R.font.poppins_bold)),
@@ -161,42 +161,41 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Brown
                     )
-                        TextField(
-                            modifier = Modifier
-                                .height(50.dp)
-                                .fillMaxWidth()
-                                .border(1.dp, Color.Red),
+                    TextField(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(),
 
-                            trailingIcon = @Composable {
-                                IconButton(onClick = { pass_visibility != pass_visibility }) {
-                                    Icon(
-                                        if (pass_visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                        contentDescription = "password visibility"
-                                    )
-                                }
-                            },
+                        trailingIcon = @Composable {
+                            IconButton(onClick = { pass_visibility != pass_visibility }) {
+                                Icon(
+                                    if (pass_visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    contentDescription = "password visibility"
+                                )
+                            }
+                        },
 
-                            value = password,
-                            onValueChange = {
-                                password = it
-                            },
-                            maxLines = 1,
-                            shape = RoundedCornerShape(18.dp),
-                            colors = TextFieldDefaults.colors(
-                                focusedTextColor = Brown,
-                                focusedContainerColor = Yellow2,
-                                unfocusedContainerColor = Yellow2,
-                                cursorColor = OrangeBase,
-                                focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent
-                            )
+                        value = password,
+                        onValueChange = {
+                            password = it
+                        },
+                        maxLines = 1,
+                        shape = RoundedCornerShape(18.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = Brown,
+                            focusedContainerColor = Yellow2,
+                            unfocusedContainerColor = Yellow2,
+                            cursorColor = OrangeBase,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
                         )
+                    )
 
 
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                        , contentAlignment = Alignment.TopEnd) {
+                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
+                    ) {
                         Text(
                             text = "Forget Password",
                             fontSize = 16.sp,
@@ -207,33 +206,37 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                     Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                            Button(
-//                                modifier = Modifier
-//                                    .width(250.dp)
-//                                    .height(50.dp),
-//                                onClick = {}, colors = ButtonColors(
-//                                    containerColor = OrangeBase, contentColor = Cream,
-//                                    disabledContainerColor = Color.White,
-//                                    disabledContentColor = Color.White
-//                                )
-//                            ) {
-//                                Text(
-//                                    "Log In",
-//                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                                    fontSize = 22.sp
-//                                )
-//                            }
+                            Button(
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .height(50.dp),
+                                onClick = {}, colors = ButtonColors(
+                                    containerColor = OrangeBase, contentColor = Cream,
+                                    disabledContainerColor = Color.White,
+                                    disabledContentColor = Color.White
+                                )
+                            ) {
+                                Text(
+                                    "Log In",
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    fontSize = 22.sp
+                                )
+                            }
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = "or", color = Brown, modifier = Modifier.padding(0.dp, 20.dp))
 
-                            Text(text = "or", color = Brown)
-
-                            Box(modifier.background(color = Orange2, shape = RoundedCornerShape(20.dp))) {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        color = Orange2,
+                                        shape = RoundedCornerShape(20.dp)
+                                    )
+                            ) {
                                 IconButton(onClick = {}) {
                                     Icon(
                                         Icons.Default.Fingerprint,
                                         contentDescription = "Fingerprint",
-                                        modifier= Modifier.size(60.dp),
+                                        modifier = Modifier.size(60.dp),
                                         tint = OrangeBase
 
                                     )
@@ -246,14 +249,14 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Don't have an account? ",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_medium)),
                             color = Brown,
                             fontWeight = FontWeight.Thin
                         )
                         Text(
                             text = "Sign Up",
-                            fontSize = 16.sp,
+                            fontSize = 14.sp,
                             fontFamily = FontFamily(Font(R.font.poppins_medium)),
                             color = OrangeBase,
                             fontWeight = FontWeight.Thin,
