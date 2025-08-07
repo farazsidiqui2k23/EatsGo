@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -101,13 +102,14 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         tint = OrangeBase
                     )
                 }
-                Spacer(modifier.width(80.dp))
-                Text(
-                    text = heading,
-                    fontFamily = FontFamily(Font(R.font.poppins_bold)),
-                    fontSize = 26.sp,
-                    color = Cream
-                )
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Text(
+                        text = heading,
+                        fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                        fontSize = 26.sp,
+                        color = Cream
+                    )
+                }
             }
             Card(
                 colors = CardDefaults.cardColors(Cream),
@@ -151,7 +153,9 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                             unfocusedIndicatorColor = Color.Transparent
                         )
                     )
-
+Box(modifier = Modifier.border(1.dp, Color.Red).fillMaxWidth(), contentAlignment = Alignment.Center){
+    Text(text =  "Hello")
+}
 
                     Text(
                         text = "Password",
@@ -159,37 +163,43 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Brown
                     )
-                    TextField(
-                        modifier = Modifier
-                            .height(50.dp)
-                            .fillMaxWidth(),
+                        TextField(
+                            modifier = Modifier
+                                .height(50.dp)
+                                .fillMaxWidth()
+                                .border(1.dp, Color.Red),
 
-                        trailingIcon = @Composable {
-                            IconButton(onClick = { pass_visibility != pass_visibility }) {
-                                Icon(
-                                    if (pass_visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = "password visibility"
-                                )
-                            }
-                        },
+                            trailingIcon = @Composable {
+                                IconButton(onClick = { pass_visibility != pass_visibility }) {
+                                    Icon(
+                                        if (pass_visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                        contentDescription = "password visibility"
+                                    )
+                                }
+                            },
 
-                        value = password,
-                        onValueChange = {
-                            password = it
-                        },
-                        maxLines = 1,
-                        shape = RoundedCornerShape(18.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedTextColor = Brown,
-                            focusedContainerColor = Yellow2,
-                            unfocusedContainerColor = Yellow2,
-                            cursorColor = OrangeBase,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
+                            value = password,
+                            onValueChange = {
+                                password = it
+                            },
+                            maxLines = 1,
+                            shape = RoundedCornerShape(18.dp),
+                            colors = TextFieldDefaults.colors(
+                                focusedTextColor = Brown,
+                                focusedContainerColor = Yellow2,
+                                unfocusedContainerColor = Yellow2,
+                                cursorColor = OrangeBase,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            )
                         )
-                    )
 
-                    Box(modifier.fillMaxWidth().background(Color.Green), contentAlignment = Alignment.TopEnd) {
+
+                    Box(
+                        modifier
+                            .fillMaxWidth()
+                            .background(Color.Green)
+                            .border(1.dp, Color.Red), contentAlignment = Alignment.TopEnd) {
                         Text(
                             text = "Forget Password",
                             fontSize = 16.sp,
@@ -253,9 +263,6 @@ fun Login_Scr(modifier: Modifier = Modifier) {
 
                             )
                     }
-
-
-
                 }
             }
         }
