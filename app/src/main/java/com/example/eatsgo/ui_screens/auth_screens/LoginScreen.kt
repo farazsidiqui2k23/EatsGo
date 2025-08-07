@@ -2,47 +2,217 @@ package com.example.eatsgo.ui_screens.auth_screens
 
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.eatsgo.R
+import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
+import com.example.eatsgo.ui.theme.OrangeBase
+import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
 
 
 @Composable
 fun Login_Scr(modifier: Modifier = Modifier) {
 
-    Box(modifier.fillMaxSize().background(YellowBase)) {
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+
+    var pass_visibility by rememberSaveable { mutableStateOf(true) }
+    Box(
+        modifier
+            .fillMaxSize()
+            .background(YellowBase)
+    ) {
         Column(modifier.fillMaxSize()) {
-            Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(.2f).padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = {}) { Icon(Icons.Default.ArrowBack, contentDescription = "", modifier = Modifier.size(30.dp)) }
-                Text(text = "Log In", fontFamily = FontFamily(Font(R.font.poppins_medium)))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(.2f)
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = {}) {
+                    Icon(
+                        Icons.Default.ArrowBack,
+                        contentDescription = "",
+                        modifier = Modifier.size(30.dp),
+                        tint = OrangeBase
+                    )
+                }
+                Spacer(modifier.width(80.dp))
+                Text(
+                    text = "Log In",
+                    fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                    fontSize = 26.sp,
+                    color = Cream
+                )
             }
-            Card(colors = CardDefaults.cardColors(Cream), shape = RoundedCornerShape(16.dp, 16.dp), modifier = Modifier.fillMaxWidth().fillMaxHeight()) { Column { } }
+            Card(
+                colors = CardDefaults.cardColors(Cream),
+                shape = RoundedCornerShape(20.dp, 20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                Column(modifier.padding(32.dp, 0.dp)) {
+
+                    Text(
+                        text = "Welcome",
+                        fontSize = 26.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                        color = Brown
+                    )
+                    Text(
+                        text = "Email",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Brown
+                    )
+
+                    TextField(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(),
+                        value = email,
+                        onValueChange = {
+                            email = it
+                        },
+                        maxLines = 1,
+                        shape = RoundedCornerShape(18.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = Brown,
+                            focusedContainerColor = Yellow2,
+                            unfocusedContainerColor = Yellow2,
+                            cursorColor = OrangeBase,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        )
+                    )
+
+
+                    Text(
+                        text = "Password",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Brown
+                    )
+                    TextField(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .fillMaxWidth(),
+
+                        trailingIcon = @Composable {
+                            IconButton(onClick = { pass_visibility != pass_visibility }) {
+                                Icon(
+                                    if (pass_visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    contentDescription = "password visibility"
+                                )
+                            }
+                        },
+
+                        value = password,
+                        onValueChange = {
+                            password = it
+                        },
+                        maxLines = 1,
+                        shape = RoundedCornerShape(18.dp),
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = Brown,
+                            focusedContainerColor = Yellow2,
+                            unfocusedContainerColor = Yellow2,
+                            cursorColor = OrangeBase,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent
+                        )
+                    )
+
+                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
+                        Text(
+                            text = "Forget Password",
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = OrangeBase
+                        )
+                    }
+
+                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                        Button(
+                            modifier = Modifier
+                                .width(250.dp)
+                                .height(50.dp),
+                            onClick = {}, colors = ButtonColors(
+                                containerColor = OrangeBase, contentColor = Cream,
+                                disabledContainerColor = Color.White,
+                                disabledContentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                "Log In",
+                                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                fontSize = 22.sp
+                            )
+                        }
+                    }
+
+                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                        Text(
+                            text = "Don't have an account? ",
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = Brown, fontWeight = FontWeight.Thin
+                        )
+                        Text(
+                            text = "Sign Up",
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = OrangeBase, fontWeight = FontWeight.Thin,
+
+                        )
+                    }
+
+
+
+                }
+            }
         }
     }
 
