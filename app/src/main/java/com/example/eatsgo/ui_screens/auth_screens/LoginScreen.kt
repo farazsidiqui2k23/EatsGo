@@ -1,5 +1,7 @@
 package com.example.eatsgo.ui_screens.auth_screens
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -31,8 +34,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,18 +54,32 @@ import androidx.compose.ui.unit.sp
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
+import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Login_Scr(modifier: Modifier = Modifier) {
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
+    var heading by rememberSaveable { mutableStateOf("Log In") }
+
     var pass_visibility by rememberSaveable { mutableStateOf(true) }
+
+    val composableScope = rememberCoroutineScope()
+    composableScope.launch {
+        delay(2000)
+        heading = "Hello"
+    }
+
     Box(
         modifier
             .fillMaxSize()
@@ -83,7 +103,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                 }
                 Spacer(modifier.width(80.dp))
                 Text(
-                    text = "Log In",
+                    text = heading,
                     fontFamily = FontFamily(Font(R.font.poppins_bold)),
                     fontSize = 26.sp,
                     color = Cream
@@ -104,6 +124,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         fontFamily = FontFamily(Font(R.font.poppins_bold)),
                         color = Brown
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = "Email",
                         fontSize = 20.sp,
@@ -168,7 +189,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         )
                     )
 
-                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.BottomEnd) {
+                    Box(modifier.fillMaxWidth().background(Color.Green), contentAlignment = Alignment.TopEnd) {
                         Text(
                             text = "Forget Password",
                             fontSize = 16.sp,
@@ -176,37 +197,61 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         )
                     }
 
-                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-                        Button(
-                            modifier = Modifier
-                                .width(250.dp)
-                                .height(50.dp),
-                            onClick = {}, colors = ButtonColors(
-                                containerColor = OrangeBase, contentColor = Cream,
-                                disabledContainerColor = Color.White,
-                                disabledContentColor = Color.White
-                            )
-                        ) {
-                            Text(
-                                "Log In",
-                                fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                fontSize = 22.sp
-                            )
+                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Button(
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .height(50.dp),
+                                onClick = {}, colors = ButtonColors(
+                                    containerColor = OrangeBase, contentColor = Cream,
+                                    disabledContainerColor = Color.White,
+                                    disabledContentColor = Color.White
+                                )
+                            ) {
+                                Text(
+                                    "Log In",
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    fontSize = 22.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(text = "or", color = Brown)
+
+                            Box(modifier.background(color = Orange2, shape = RoundedCornerShape(20.dp))) {
+                                IconButton(onClick = {}) {
+                                    Icon(
+                                        Icons.Default.Fingerprint,
+                                        contentDescription = "Fingerprint",
+                                        modifier= Modifier.size(60.dp),
+                                        tint = OrangeBase
+
+                                    )
+                                }
+
+                            }
                         }
                     }
 
-                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                         Text(
                             text = "Don't have an account? ",
                             fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = Brown, fontWeight = FontWeight.Thin
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                            color = Brown,
+                            fontWeight = FontWeight.Thin
                         )
                         Text(
                             text = "Sign Up",
                             fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = OrangeBase, fontWeight = FontWeight.Thin,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                            color = OrangeBase,
+                            fontWeight = FontWeight.Thin,
 
-                        )
+                            )
                     }
 
 
