@@ -218,6 +218,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                             color = Brown, fontSize = 16.sp
                         ),
                         lineLimits = TextFieldLineLimits.SingleLine
+
                     )
 
                     Text(
@@ -292,7 +293,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                     Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                             Button(
                                 modifier = Modifier
-                                    .width(250.dp)
+                                    .width(200.dp)
                                     .height(50.dp),
                                 onClick = {}, colors = ButtonColors(
                                     containerColor = OrangeBase, contentColor = Cream,
