@@ -47,6 +47,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,7 +75,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
 
     var heading by rememberSaveable { mutableStateOf("Log In") }
 
-    var pass_visibility by rememberSaveable { mutableStateOf(true) }
+    var pass_visibility by rememberSaveable { mutableStateOf(false) }
 
     val composableScope = rememberCoroutineScope()
     composableScope.launch {
@@ -90,8 +92,8 @@ fun Login_Scr(modifier: Modifier = Modifier) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(.2f)
-                    .padding(12.dp),
+                    .fillMaxHeight(.15f)
+                    .padding(12.dp, 12.dp, 12.dp, 32.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 IconButton(onClick = {}) {
@@ -142,7 +144,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         onValueChange = {
                             email = it
                         },
-                        maxLines = 1,
+                        singleLine = true,
                         shape = RoundedCornerShape(18.dp),
                         colors = TextFieldDefaults.colors(
                             focusedTextColor = Brown,
@@ -167,9 +169,9 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                             .fillMaxWidth(),
 
                         trailingIcon = @Composable {
-                            IconButton(onClick = { pass_visibility != pass_visibility }) {
+                            IconButton(onClick = { pass_visibility = !pass_visibility }) {
                                 Icon(
-                                    if (pass_visibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    if (pass_visibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                                     contentDescription = "password visibility"
                                 )
                             }
@@ -179,7 +181,8 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         onValueChange = {
                             password = it
                         },
-                        maxLines = 1,
+                        visualTransformation = if (pass_visibility) VisualTransformation.None  else PasswordVisualTransformation(),
+                        singleLine = true,
                         shape = RoundedCornerShape(18.dp),
                         colors = TextFieldDefaults.colors(
                             focusedTextColor = Brown,
@@ -190,7 +193,6 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                             unfocusedIndicatorColor = Color.Transparent
                         )
                     )
-
 
                     Box(
                         modifier = Modifier
