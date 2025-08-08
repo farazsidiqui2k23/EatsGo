@@ -293,7 +293,6 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                     Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                             Button(
                                 modifier = Modifier
-                                    .width(200.dp)
                                     .height(50.dp),
                                 onClick = {}, colors = ButtonColors(
                                     containerColor = OrangeBase, contentColor = Cream,
