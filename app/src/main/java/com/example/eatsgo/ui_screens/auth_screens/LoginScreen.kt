@@ -272,8 +272,8 @@ fun Login_Scr(modifier: Modifier = Modifier) {
 
 }
 
-@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-@Composable
-fun Ui() {
-    Login_Scr()
-}
+//@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
+//@Composable
+//fun Ui() {
+//    Login_Scr()
+//}
