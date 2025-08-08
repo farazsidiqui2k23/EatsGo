@@ -153,7 +153,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         color = Brown
                     )
                     BasicTextField2(
-                        modifier = input_modifier,
+                          modifier = input_modifier,
                         state = full_name,
                         cursorBrush = SolidColor(OrangeBase),
                         textStyle = TextStyle(
