@@ -15,6 +15,7 @@ import com.example.eatsgo.ui.theme.EatsGoTheme
 import com.example.eatsgo.ui_screens.BoardingScr
 import com.example.eatsgo.ui_screens.Welcome_scr
 import com.example.eatsgo.ui_screens.auth_screens.Login_Scr
+import com.example.eatsgo.ui_screens.auth_screens.SignUp_Scr
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +26,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    Welcome_scr(modifier = Modifier.padding(innerPadding))
 //                    BoardingScr(modifier = Modifier.padding(innerPadding))
-                    Login_Scr(modifier = Modifier.padding(innerPadding))
+//                    Login_Scr(modifier = Modifier.padding(innerPadding))
+                    SignUp_Scr(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
