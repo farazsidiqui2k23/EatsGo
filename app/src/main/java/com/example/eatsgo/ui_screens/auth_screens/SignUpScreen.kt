@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -91,15 +92,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUp_Scr(modifier: Modifier = Modifier) {
 
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var email = rememberTextFieldState()
+    var password = rememberTextFieldState()
     var full_name = rememberTextFieldState()
-    var mobile_no by rememberSaveable { mutableStateOf("") }
-    var date_of_birth by rememberSaveable { mutableStateOf("") }
+    var mobile_no = rememberTextFieldState()
+    var date_of_birth = rememberTextFieldState()
 
     var heading by rememberSaveable { mutableStateOf("Sign Up") }
 
     var passVisibility by rememberSaveable { mutableStateOf(false) }
+
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val isKeyboardVisible = WindowInsets.isImeVisible
@@ -111,11 +113,6 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
         .background(Yellow2)
         .padding(12.dp)
         .focusRequester(focusRequester)
-        .onFocusChanged { focusState ->
-            if (focusState.isFocused && !isKeyboardVisible) {
-                focusRequester.requestFocus()
-            }
-        }
         .clickable {
             if (!isKeyboardVisible) {
                 focusRequester.requestFocus()
@@ -173,7 +170,6 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
             ) {
                 Column(modifier.padding(32.dp, 0.dp)) {
 
-
                     Text(
                         text = "Full Name",
                         fontSize = 18.sp,
@@ -187,230 +183,150 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
                         ),
-                        lineLimits = TextFieldLineLimits.SingleLine,
+                        lineLimits = TextFieldLineLimits.SingleLine
+                    )
 
+                    Text(
+                        text = "Email",
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Brown
+                    )
+
+                    BasicTextField2(
+                        modifier = input_modifier,
+                        state = email,
+                        cursorBrush = SolidColor(OrangeBase),
+                        textStyle = TextStyle(
+                            color = Brown, fontSize = 16.sp
+                        ),
+                        lineLimits = TextFieldLineLimits.SingleLine
+                    )
+
+
+                    Text(
+                        text = "Password",
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Brown
+                    )
+                    BasicTextField2(
+                        modifier = input_modifier,
+                    state = password,
+                        cursorBrush = SolidColor(OrangeBase),
+                        textStyle = TextStyle(
+                            color = Brown, fontSize = 16.sp
+                        ),
+                        lineLimits = TextFieldLineLimits.SingleLine
+                    )
+
+                    Text(
+                        text = "Mobile Number",
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Brown
+                    )
+
+                    BasicTextField2(
+                        modifier = input_modifier,
+                        state =mobile_no,
+                        cursorBrush = SolidColor(OrangeBase),
+                        textStyle = TextStyle(
+                            color = Brown, fontSize = 16.sp
+                        ),
+                        lineLimits = TextFieldLineLimits.SingleLine
+                    )
+
+                    Text(
+                        text = "Date of Birth",
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        color = Brown
+                    )
+                    BasicTextField2(
+                        modifier = input_modifier,
+                        state = date_of_birth,
+                        cursorBrush = SolidColor(OrangeBase),
+                        textStyle = TextStyle(
+                            color = Brown, fontSize = 16.sp
+                        ),
+                        lineLimits = TextFieldLineLimits.SingleLine
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(), contentAlignment = Alignment.Center
+                    ) {
+                        Column {
+                                Text(
+                                    text = "By continuing, you agree to",
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                    color = Brown, modifier = Modifier.offset(x = 0.dp, y= 8.dp)
+                                )
+                                Row {
+                                    Text(
+                                        text = "Terms of use",
+                                        fontSize = 12.sp,
+                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                        color = OrangeBase
+                                    )
+                                    Text(
+                                        text =  " and ",
+                                        fontSize = 12.sp,
+                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                        color = Brown
+                                    )
+                                    Text(
+                                        text = "Privacy Policy.",
+                                        fontSize = 12.sp,
+                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                        color = OrangeBase
+                                    )
+                                }
+
+                        }
+                    }
+
+
+                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Button(
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .height(50.dp),
+                                onClick = {}, colors = ButtonColors(
+                                    containerColor = OrangeBase, contentColor = Cream,
+                                    disabledContainerColor = Color.White,
+                                    disabledContentColor = Color.White
+                                )
+                            ) {
+                                Text(
+                                    "Create Account",
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    fontSize = 20.sp
+                                )
+                            }
+                    }
+
+                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                        Text(
+                            text = "Already have an account? ",
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            color = Brown,
                         )
+                        Text(
+                            text = "Sign In",
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                            color = OrangeBase,
 
-                    Button(onClick = { focusManager.clearFocus() }) { }
-
-
-//                    Text(
-//                        text = "Email",
-//                        fontSize = 20.sp,
-//                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                        color = Brown
-//                    )
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .height(50.dp)
-//                            .fillMaxWidth(),
-//                        value = email,
-//                        onValueChange = {
-//                            email = it
-//                        },
-//                        singleLine = true,
-//                        shape = RoundedCornerShape(18.dp),
-//                        colors = TextFieldDefaults.colors(
-//                            focusedTextColor = Brown,
-//                            focusedContainerColor = Yellow2,
-//                            unfocusedContainerColor = Yellow2,
-//                            cursorColor = OrangeBase,
-//                            focusedIndicatorColor = Color.Transparent,
-//                            unfocusedIndicatorColor = Color.Transparent
-//                        )
-//                    )
-//
-//
-//                    Text(
-//                        text = "Password",
-//                        fontSize = 20.sp,
-//                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                        color = Brown
-//                    )
-//                    TextField(
-//                        modifier = Modifier
-//                            .height(50.dp)
-//                            .fillMaxWidth(),
-//
-//                        trailingIcon = @Composable {
-//                            IconButton(onClick = { pass_visibility = !pass_visibility }) {
-//                                Icon(
-//                                    if (pass_visibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-//                                    contentDescription = "password visibility"
-//                                )
-//                            }
-//                        },
-//
-//                        value = password,
-//                        onValueChange = {
-//                            password = it
-//                        },
-//                        visualTransformation = if (pass_visibility) VisualTransformation.None  else PasswordVisualTransformation(),
-//                        singleLine = true,
-//                        shape = RoundedCornerShape(18.dp),
-//                        colors = TextFieldDefaults.colors(
-//                            focusedTextColor = Brown,
-//                            focusedContainerColor = Yellow2,
-//                            unfocusedContainerColor = Yellow2,
-//                            cursorColor = OrangeBase,
-//                            focusedIndicatorColor = Color.Transparent,
-//                            unfocusedIndicatorColor = Color.Transparent
-//                        )
-//                    )
-//
-//                    Text(
-//                        text = "Mobile Number",
-//                        fontSize = 20.sp,
-//                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                        color = Brown
-//                    )
-//
-//                    TextField(
-//                        modifier = Modifier
-//                            .height(50.dp)
-//                            .fillMaxWidth(),
-//                        value = mobile_no,
-//                        onValueChange = {
-//                            mobile_no = it
-//                        },
-//                        singleLine = true,
-//                        shape = RoundedCornerShape(18.dp),
-//                        colors = TextFieldDefaults.colors(
-//                            focusedTextColor = Brown,
-//                            focusedContainerColor = Yellow2,
-//                            unfocusedContainerColor = Yellow2,
-//                            cursorColor = OrangeBase,
-//                            focusedIndicatorColor = Color.Transparent,
-//                            unfocusedIndicatorColor = Color.Transparent
-//                        )
-//                    )
-//
-//                    Text(
-//                        text = "Date of Birth",
-//                        fontSize = 20.sp,
-//                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                        color = Brown
-//                    )
-//                    TextField(
-//                        modifier = Modifier
-//                            .height(50.dp)
-//                            .fillMaxWidth(),
-//                        value = date_of_birth,
-//                        onValueChange = {
-//                            date_of_birth = it
-//                        },
-//                        singleLine = true,
-//                        shape = RoundedCornerShape(18.dp),
-//                        colors = TextFieldDefaults.colors(
-//                            focusedTextColor = Brown,
-//                            focusedContainerColor = Yellow2,
-//                            unfocusedContainerColor = Yellow2,
-//                            cursorColor = OrangeBase,
-//                            focusedIndicatorColor = Color.Transparent,
-//                            unfocusedIndicatorColor = Color.Transparent
-//                        )
-//                    )
-
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-//                    ) {
-//                        Column {
-//                        Text(
-//                            text = "By continuing, you agree to",
-//                            fontSize = 16.sp,
-//                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = OrangeBase
-//                        )
-//                            Row {
-//                                Text(
-//                                    text = "Terms of use",
-//                                    fontSize = 16.sp,
-//                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                                    color = OrangeBase
-//                                )
-//                                Text(
-//                                    text = "&",
-//                                    fontSize = 16.sp,
-//                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                                    color = OrangeBase
-//                                )
-//                                Text(
-//                                    text = "Privacy Policy.",
-//                                    fontSize = 16.sp,
-//                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                                    color = OrangeBase
-//                                )
-//                            }
-//                        }
-//                    }
-
-
-//                    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-//
-//                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                            Button(
-//                                modifier = Modifier
-//                                    .width(250.dp)
-//                                    .height(50.dp),
-//                                onClick = {}, colors = ButtonColors(
-//                                    containerColor = OrangeBase, contentColor = Cream,
-//                                    disabledContainerColor = Color.White,
-//                                    disabledContentColor = Color.White
-//                                )
-//                            ) {
-//                                Text(
-//                                    "Log In",
-//                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                                    fontSize = 22.sp
-//                                )
-//                            }
-//
-//                            Text(text = "or", color = Brown, modifier = Modifier.padding(0.dp, 20.dp))
-//
-//                            Box(
-//                                modifier = Modifier
-//                                    .background(
-//                                        color = Orange2,
-//                                        shape = RoundedCornerShape(20.dp)
-//                                    )
-//                            ) {
-//                                IconButton(onClick = {}) {
-//                                    Icon(
-//                                        Icons.Default.Fingerprint,
-//                                        contentDescription = "Fingerprint",
-//                                        modifier = Modifier.size(60.dp),
-//                                        tint = OrangeBase
-//
-//                                    )
-//                                }
-//
-//                            }
-//                        }
-//                    }
-//
-//                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-//                        Text(
-//                            text = "Don't have an account? ",
-//                            fontSize = 14.sp,
-//                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                            color = Brown,
-//                            fontWeight = FontWeight.Thin
-//                        )
-//                        Text(
-//                            text = "Sign Up",
-//                            fontSize = 14.sp,
-//                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-//                            color = OrangeBase,
-//                            fontWeight = FontWeight.Thin,
-//
-//                            )
-//                    }
+                            )
+                    }
                 }
             }
         }
     }
-
 }
 
 @Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
