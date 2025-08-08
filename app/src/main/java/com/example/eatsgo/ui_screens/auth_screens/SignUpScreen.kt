@@ -100,7 +100,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
     var heading by rememberSaveable { mutableStateOf("Sign Up") }
 
     var passVisibility by rememberSaveable { mutableStateOf(false) }
-    val focusRequester = remember{FocusRequester()}
+    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val isKeyboardVisible = WindowInsets.isImeVisible
 
@@ -112,17 +112,21 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
         .padding(12.dp)
         .focusRequester(focusRequester)
         .onFocusChanged { focusState ->
-            if(focusState.isFocused && !isKeyboardVisible){
+            if (focusState.isFocused && !isKeyboardVisible) {
                 focusRequester.requestFocus()
             }
-
         }
-        .clickable { if(!isKeyboardVisible){
-            focusRequester.requestFocus()
-        }
+        .clickable {
+            if (!isKeyboardVisible) {
+                focusRequester.requestFocus()
+            }
         }
 
-
+    LaunchedEffect(isKeyboardVisible) {
+        if (!isKeyboardVisible) {
+            focusManager.clearFocus()
+        }
+    }
 
     val composableScope = rememberCoroutineScope()
     composableScope.launch {
@@ -177,7 +181,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         color = Brown
                     )
                     BasicTextField2(
-                          modifier = input_modifier,
+                        modifier = input_modifier,
                         state = full_name,
                         cursorBrush = SolidColor(OrangeBase),
                         textStyle = TextStyle(
@@ -186,6 +190,8 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         lineLimits = TextFieldLineLimits.SingleLine,
 
                         )
+
+                    Button(onClick = { focusManager.clearFocus() }) { }
 
 
 //                    Text(
