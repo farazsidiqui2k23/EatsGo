@@ -12,6 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.eatsgo.ui.theme.EatsGoTheme
+import com.example.eatsgo.ui_screens.BoardingScr
+import com.example.eatsgo.ui_screens.Welcome_scr
+import com.example.eatsgo.ui_screens.auth_screens.Login_Scr
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,10 +23,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             EatsGoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+//                    Welcome_scr(modifier = Modifier.padding(innerPadding))
+//                    BoardingScr(modifier = Modifier.padding(innerPadding))
+                    Login_Scr(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
