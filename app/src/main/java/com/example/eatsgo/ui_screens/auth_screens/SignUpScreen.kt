@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.BasicTextField2
 import androidx.compose.foundation.text2.input.CodepointTransformation
@@ -63,6 +64,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -73,6 +75,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -191,7 +194,13 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
                         ),
-                        lineLimits = TextFieldLineLimits.SingleLine
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
 
                     Text(
@@ -208,7 +217,13 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
                         ),
-                        lineLimits = TextFieldLineLimits.SingleLine
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
 
 
@@ -243,7 +258,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                                 ) {
                                     Icon(
                                         if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = "",tint = OrangeBase
+                                        contentDescription = "", tint = OrangeBase
                                     )
                                 }
 
@@ -252,7 +267,13 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         codepointTransformation = if (!passVisibility) CodepointTransformation.mask(
                             '\u25CF'
                         ) else null,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
 
                     )
 
@@ -271,7 +292,13 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                             color = Brown, fontSize = 16.sp
                         ),
                         lineLimits = TextFieldLineLimits.SingleLine,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        )
                     )
 
                     Text(
@@ -295,7 +322,11 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                             ) {
 
                                 Box(modifier = Modifier.weight(1f)) {
-                                    innerTextField()
+                                    if(date_of_birth.text.isEmpty()){
+                                        Text("dd/mm/yyyy", color = Brown.copy(alpha = 0.5f))
+                                    }else {
+                                        innerTextField()
+                                    }
                                 }
                                 Spacer(modifier = Modifier.width(12.dp))
                                 IconButton(
@@ -311,7 +342,12 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
 
                             }
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onNext = { focusManager.clearFocus() })
+
                     )
 
                     Box(
