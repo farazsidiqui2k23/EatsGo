@@ -60,4 +60,10 @@ dependencies {
 //    implementation("androidx.compose.material3:material3:1.2.1") implementation(libs.androidx.material3.icons.extended)
     implementation(libs.androidx.material.icons.extended)
 
+    // Jetpack Compose navigation integration
+    implementation(libs.androidx.navigation.compose)
+
+    //accompanist integration
+    implementation (libs.accompanist.systemuicontroller)
+
 }
