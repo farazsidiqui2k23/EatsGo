@@ -243,7 +243,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                                 ) {
                                     Icon(
                                         if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = "",
+                                        contentDescription = "",tint = OrangeBase
                                     )
                                 }
 
@@ -396,8 +396,8 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-@Composable
-fun Ui() {
-    SignUp_Scr()
-}
+//@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
+//@Composable
+//fun Ui() {
+//    SignUp_Scr()
+//}

@@ -223,7 +223,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                                 ) {
                                     Icon(
                                         if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = "",
+                                        contentDescription = "",tint = OrangeBase
                                     )
                                 }
 
