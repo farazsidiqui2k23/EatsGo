@@ -60,11 +60,6 @@ import com.example.eatsgo.ui.theme.Yellow2
 @Composable
 fun BoardingScr(modifier: Modifier = Modifier) {
 
-
-//    val boardingItem = (1..3).toList()
-//    val boardingState = rememberLazyListState(0)
-//    val flingBehaviour = rememberSnapFlingBehavior(lazyListState = boardingState)
-
     var currentBoardIndex by rememberSaveable { mutableIntStateOf(0) }
 
     var currentImage by rememberSaveable { mutableIntStateOf(R.drawable.login_screen_logo) }
@@ -72,6 +67,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
     var cardTitle by rememberSaveable { mutableStateOf("Order For Food") }
     var cardDesc by rememberSaveable { mutableStateOf("") }
     var cardBtnText by rememberSaveable { mutableStateOf("Next") }
+    var isVisible by rememberSaveable { mutableStateOf(true) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -85,6 +81,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                 cardTitle = "Order For Food"
                 cardDesc = "Heart-healthy meals delivered by hand to your house"
                 cardBtnText = "Next"
+                isVisible = true
             }
 
             1 -> {
@@ -93,6 +90,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                 cardTitle = "Easy Payment"
                 cardDesc = "Payiment is easy, fast, and secure"
                 cardBtnText = "Next"
+                isVisible = true
             }
 
             2 -> {
@@ -101,6 +99,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                 cardTitle = "Fast Delivery"
                 cardDesc = "Delivery that is always on time"
                 cardBtnText = "Get Started"
+                isVisible = false
             }
         }
 
@@ -122,15 +121,18 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                     .padding(20.dp, 30.dp),
                 contentAlignment = Alignment.TopEnd
             ) {
-                Button(
-                    onClick = {
-                        //here skip for login/sign ui
-                    }, colors = ButtonColors(
-                        containerColor = OrangeBase, contentColor = Cream,
-                        disabledContainerColor = Color.Transparent,
-                        disabledContentColor = Color.Transparent,
-                    )
-                ) { Text("Skip", fontSize = 14.sp) }
+                if(isVisible){
+                    Button(
+                        onClick = {
+                            //here skip for login/sign ui
+                        }, colors = ButtonColors(
+                            containerColor = OrangeBase, contentColor = Cream,
+                            disabledContainerColor = Color.Transparent,
+                            disabledContentColor = Color.Transparent,
+                        )
+
+                    ) { Text("Skip", fontSize = 14.sp) }
+                }
             }
             Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.BottomEnd) {
 
