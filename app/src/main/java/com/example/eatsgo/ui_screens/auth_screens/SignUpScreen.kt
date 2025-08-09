@@ -255,7 +255,7 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
 
                     )
-                    println(password)
+
                     Text(
                         text = "Mobile Number",
                         fontSize = 18.sp,

@@ -1,24 +1,36 @@
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+
 package com.example.eatsgo.ui_screens.auth_screens
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Icon
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.CodepointTransformation
+import androidx.compose.foundation.text2.input.TextFieldLineLimits
+import androidx.compose.foundation.text2.input.mask
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Fingerprint
@@ -38,15 +50,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.intl.Locale
@@ -66,16 +86,41 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Login_Scr(modifier: Modifier = Modifier) {
 
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    var email = rememberTextFieldState()
+    var password = rememberTextFieldState()
 
     var heading by rememberSaveable { mutableStateOf("Log In") }
 
-    var pass_visibility by rememberSaveable { mutableStateOf(false) }
+    var passVisibility by rememberSaveable { mutableStateOf(false) }
+
+
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val isKeyboardVisible = WindowInsets.isImeVisible
+
+    val input_modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 2.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(Yellow2)
+        .padding(12.dp)
+        .focusRequester(focusRequester)
+        .clickable {
+            if (!isKeyboardVisible) {
+                focusRequester.requestFocus()
+            }
+        }
+
+    LaunchedEffect(isKeyboardVisible) {
+        if (!isKeyboardVisible) {
+            focusManager.clearFocus()
+        }
+    }
 
     val composableScope = rememberCoroutineScope()
     composableScope.launch {
@@ -136,24 +181,14 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         color = Brown
                     )
 
-                    TextField(
-                        modifier = Modifier
-                            .height(50.dp)
-                            .fillMaxWidth(),
-                        value = email,
-                        onValueChange = {
-                            email = it
-                        },
-                        singleLine = true,
-                        shape = RoundedCornerShape(18.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedTextColor = Brown,
-                            focusedContainerColor = Yellow2,
-                            unfocusedContainerColor = Yellow2,
-                            cursorColor = OrangeBase,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        )
+                    BasicTextField2(
+                        modifier = input_modifier,
+                        state = email,
+                        cursorBrush = SolidColor(OrangeBase),
+                        textStyle = TextStyle(
+                            color = Brown, fontSize = 16.sp
+                        ),
+                        lineLimits = TextFieldLineLimits.SingleLine
                     )
 
 
@@ -163,37 +198,43 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Brown
                     )
-                    TextField(
-                        modifier = Modifier
-                            .height(50.dp)
-                            .fillMaxWidth(),
+                    BasicTextField2(
+                        modifier = input_modifier,
+                        state = password,
+                        cursorBrush = SolidColor(OrangeBase),
+                        textStyle = TextStyle(
+                            color = Brown, fontSize = 16.sp
+                        ),
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        decorator = { innerTextField ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
-                        trailingIcon = @Composable {
-                            IconButton(onClick = { pass_visibility = !pass_visibility }) {
-                                Icon(
-                                    if (pass_visibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = "password visibility"
-                                )
+                                Box(modifier = Modifier.weight(1f)) {
+                                    innerTextField()
+                                }
+                                Spacer(modifier = Modifier.width(12.dp))
+                                IconButton(
+                                    onClick = { passVisibility = !passVisibility },
+                                    modifier = Modifier
+                                        .then(Modifier.size(24.dp))
+                                ) {
+                                    Icon(
+                                        if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = "",
+                                    )
+                                }
+
                             }
                         },
+                        codepointTransformation = if (!passVisibility) CodepointTransformation.mask(
+                            '\u25CF'
+                        ) else null,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
 
-                        value = password,
-                        onValueChange = {
-                            password = it
-                        },
-                        visualTransformation = if (pass_visibility) VisualTransformation.None  else PasswordVisualTransformation(),
-                        singleLine = true,
-                        shape = RoundedCornerShape(18.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedTextColor = Brown,
-                            focusedContainerColor = Yellow2,
-                            unfocusedContainerColor = Yellow2,
-                            cursorColor = OrangeBase,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        )
                     )
-
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(), contentAlignment = Alignment.TopEnd
