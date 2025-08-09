@@ -28,12 +28,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.CodepointTransformation
 import androidx.compose.foundation.text2.input.TextFieldLineLimits
 import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text2.input.mask
 import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Visibility
@@ -69,9 +73,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -86,6 +93,7 @@ import com.example.eatsgo.ui.theme.YellowBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.security.Key
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -212,15 +220,42 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                     )
                     BasicTextField2(
                         modifier = input_modifier,
-                    state = password,
+                        state = password,
                         cursorBrush = SolidColor(OrangeBase),
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
                         ),
-                        lineLimits = TextFieldLineLimits.SingleLine
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        decorator = { innerTextField ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+
+                                Box(modifier = Modifier.weight(1f)) {
+                                    innerTextField()
+                                }
+                                Spacer(modifier = Modifier.width(12.dp))
+                                IconButton(
+                                    onClick = { passVisibility = !passVisibility },
+                                    modifier = Modifier
+                                        .then(Modifier.size(24.dp))
+                                ) {
+                                    Icon(
+                                        if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                        contentDescription = "",
+                                    )
+                                }
+
+                            }
+                        },
+                        codepointTransformation = if (!passVisibility) CodepointTransformation.mask(
+                            '\u25CF'
+                        ) else null,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
 
                     )
-
+                    println(password)
                     Text(
                         text = "Mobile Number",
                         fontSize = 18.sp,
@@ -230,12 +265,13 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
 
                     BasicTextField2(
                         modifier = input_modifier,
-                        state =mobile_no,
+                        state = mobile_no,
                         cursorBrush = SolidColor(OrangeBase),
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
                         ),
-                        lineLimits = TextFieldLineLimits.SingleLine
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
                     Text(
@@ -251,64 +287,95 @@ fun SignUp_Scr(modifier: Modifier = Modifier) {
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
                         ),
-                        lineLimits = TextFieldLineLimits.SingleLine
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        decorator = { innerTextField ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+
+                                Box(modifier = Modifier.weight(1f)) {
+                                    innerTextField()
+                                }
+                                Spacer(modifier = Modifier.width(12.dp))
+                                IconButton(
+                                    onClick = {},
+                                    modifier = Modifier
+                                        .then(Modifier.size(24.dp))
+                                ) {
+                                    Icon(
+                                        Icons.Default.CalendarMonth,
+                                        contentDescription = "",
+                                    )
+                                }
+
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
 
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(), contentAlignment = Alignment.Center
                     ) {
-                        Column {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.offset(x = 0.dp, y = 8.dp)
+                        ) {
+                            Text(
+                                text = "By continuing, you agree to",
+                                fontSize = 12.sp,
+                                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                                color = Brown, modifier = Modifier.offset(x = 0.dp, y = 8.dp)
+                            )
+                            Row {
                                 Text(
-                                    text = "By continuing, you agree to",
+                                    text = "Terms of use",
                                     fontSize = 12.sp,
-                                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                                    color = Brown, modifier = Modifier.offset(x = 0.dp, y= 8.dp)
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    color = OrangeBase
                                 )
-                                Row {
-                                    Text(
-                                        text = "Terms of use",
-                                        fontSize = 12.sp,
-                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                        color = OrangeBase
-                                    )
-                                    Text(
-                                        text =  " and ",
-                                        fontSize = 12.sp,
-                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                        color = Brown
-                                    )
-                                    Text(
-                                        text = "Privacy Policy.",
-                                        fontSize = 12.sp,
-                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                        color = OrangeBase
-                                    )
-                                }
+                                Text(
+                                    text = " and ",
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    color = Brown
+                                )
+                                Text(
+                                    text = "Privacy Policy.",
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                    color = OrangeBase
+                                )
+                            }
 
                         }
                     }
 
-
                     Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Button(
-                                modifier = Modifier
-                                    .height(50.dp),
-                                onClick = {}, colors = ButtonColors(
-                                    containerColor = OrangeBase, contentColor = Cream,
-                                    disabledContainerColor = Color.White,
-                                    disabledContentColor = Color.White
-                                )
-                            ) {
-                                Text(
-                                    "Create Account",
-                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                    fontSize = 20.sp
-                                )
-                            }
+                        Button(
+                            modifier = Modifier
+                                .height(50.dp),
+                            onClick = {}, colors = ButtonColors(
+                                containerColor = OrangeBase, contentColor = Cream,
+                                disabledContainerColor = Color.White,
+                                disabledContentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                "Create Account",
+                                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                fontSize = 20.sp
+                            )
+                        }
                     }
 
-                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
                         Text(
                             text = "Already have an account? ",
                             fontSize = 14.sp,
