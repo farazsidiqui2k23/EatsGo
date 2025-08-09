@@ -257,8 +257,8 @@ Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
-@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-@Composable
-fun Ui() {
-    ForgetPassword_Scr()
-}
+//@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
+//@Composable
+//fun Ui() {
+//    ForgetPassword_Scr()
+//}
