@@ -176,7 +176,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = "Email",
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Brown
                     )
@@ -194,7 +194,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
 
                     Text(
                         text = "Password",
-                        fontSize = 20.sp,
+                        fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Brown
                     )
@@ -249,21 +249,23 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                     Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Button(
-                                modifier = Modifier
-                                    .width(250.dp)
-                                    .height(50.dp),
-                                onClick = {}, colors = ButtonColors(
-                                    containerColor = OrangeBase, contentColor = Cream,
-                                    disabledContainerColor = Color.White,
-                                    disabledContentColor = Color.White
-                                )
-                            ) {
-                                Text(
-                                    "Log In",
-                                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                    fontSize = 22.sp
-                                )
+                            Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                Button(
+                                    modifier = Modifier
+                                        .height(50.dp)
+                                        .width(220.dp),
+                                    onClick = {}, colors = ButtonColors(
+                                        containerColor = OrangeBase, contentColor = Cream,
+                                        disabledContainerColor = Color.White,
+                                        disabledContentColor = Color.White
+                                    )
+                                ) {
+                                    Text(
+                                        "Log In",
+                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                        fontSize = 20.sp
+                                    )
+                                }
                             }
 
                             Text(text = "or", color = Brown, modifier = Modifier.padding(0.dp, 20.dp))
