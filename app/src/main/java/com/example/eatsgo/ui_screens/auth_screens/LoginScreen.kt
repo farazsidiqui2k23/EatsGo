@@ -3,11 +3,8 @@
 package com.example.eatsgo.ui_screens.auth_screens
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,17 +22,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.CodepointTransformation
-import androidx.compose.foundation.text2.input.TextFieldLineLimits
-import androidx.compose.foundation.text2.input.mask
-import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Fingerprint
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -45,8 +39,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -58,23 +50,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eatsgo.R
@@ -84,10 +71,10 @@ import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
+import com.example.eatsgo.ui_screens.SenhaOutputTransformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -184,7 +171,7 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         color = Brown
                     )
 
-                    BasicTextField2(
+                    BasicTextField(
                         modifier = input_modifier,
                         state = email,
                         cursorBrush = SolidColor(OrangeBase),
@@ -194,9 +181,6 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         lineLimits = TextFieldLineLimits.SingleLine,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
                         )
                     )
 
@@ -207,9 +191,8 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                         fontFamily = FontFamily(Font(R.font.poppins_medium)),
                         color = Brown
                     )
-                    BasicTextField2(
-                        modifier = input_modifier,
-                        state = password,
+                    BasicTextField(password,
+                        input_modifier,
                         cursorBrush = SolidColor(OrangeBase),
                         textStyle = TextStyle(
                             color = Brown, fontSize = 16.sp
@@ -232,23 +215,21 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                                 ) {
                                     Icon(
                                         if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = "",tint = OrangeBase
+                                        contentDescription = "", tint = OrangeBase
                                     )
                                 }
 
                             }
                         },
-                        codepointTransformation = if (!passVisibility) CodepointTransformation.mask(
-                            '\u25CF'
-                        ) else null, keyboardOptions = KeyboardOptions(
+                        outputTransformation = if (!passVisibility) {
+                           SenhaOutputTransformation()
+                        } else {
+                            null
+                        },
+                        keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Password,
                             imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.clearFocus() }
-                        )
-
-                    )
+                        ))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(), contentAlignment = Alignment.TopEnd
@@ -282,7 +263,11 @@ fun Login_Scr(modifier: Modifier = Modifier) {
                                 }
                             }
 
-                            Text(text = "or", color = Brown, modifier = Modifier.padding(0.dp, 20.dp))
+                            Text(
+                                text = "or",
+                                color = Brown,
+                                modifier = Modifier.padding(0.dp, 20.dp)
+                            )
 
                             Box(
                                 modifier = Modifier
