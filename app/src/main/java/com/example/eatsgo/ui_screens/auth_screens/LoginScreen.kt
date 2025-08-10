@@ -61,6 +61,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
@@ -72,13 +73,13 @@ import com.example.eatsgo.ui_screens.SenhaOutputTransformation
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun LoginUI(context: Context, modifier: Modifier = Modifier) {
+fun LoginUI(context: Context, navController: NavController, modifier: Modifier = Modifier) {
 
     MainUILayout(
         modifier = modifier,
         title = "Log In",
         changeTitle = "Hello",
-        content = { LoginCardLayout(modifier) }
+        content = { LoginCardLayout(navController, modifier) }
     ) {
         //back press functionality
         Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
@@ -87,7 +88,7 @@ fun LoginUI(context: Context, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LoginCardLayout(modifier: Modifier = Modifier) {
+fun LoginCardLayout(navController: NavController, modifier: Modifier = Modifier) {
 
 
     var email = rememberTextFieldState()
