@@ -75,15 +75,15 @@ import com.example.eatsgo.ui_screens.SenhaOutputTransformation
 @Composable
 fun SignUpScreen(context: Context, navController: NavController, modifier: Modifier = Modifier) {
 
-   MainUILayout(
-       modifier = modifier,
-       title = "Sign Up",
-       changeTitle = "New Account",
-       content = { SignUpCardLayout(navController, modifier) }
-   ) { 
-       //onback functionality
-       Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
-   }
+    MainUILayout(
+        modifier = modifier,
+        title = "Sign Up",
+        changeTitle = "New Account",
+        content = { SignUpCardLayout(navController, modifier) }
+    ) {
+        //onback functionality
+        Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
+    }
 }
 
 @Composable
@@ -94,7 +94,7 @@ fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier
     var full_name = rememberTextFieldState()
     var mobile_no = rememberTextFieldState()
     var date_of_birth = rememberTextFieldState()
-    
+
     var passVisibility by rememberSaveable { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
@@ -119,7 +119,7 @@ fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier
             focusManager.clearFocus()
         }
     }
-    
+
     Card(
         colors = CardDefaults.cardColors(Cream),
         shape = RoundedCornerShape(20.dp, 20.dp),
@@ -261,9 +261,9 @@ fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier
                     ) {
 
                         Box(modifier = Modifier.weight(1f)) {
-                            if(date_of_birth.text.isEmpty()){
+                            if (date_of_birth.text.isEmpty()) {
                                 Text("dd/mm/yyyy", color = Brown.copy(alpha = 0.5f))
-                            }else {
+                            } else {
                                 innerTextField()
                             }
                         }
@@ -362,12 +362,15 @@ fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier
                     color = Brown,
                 )
                 Text(
-                    text = "Sign In",
+                    text = "Log In",
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = OrangeBase,
 
-                    )
+                    modifier = Modifier.clickable(
+                        enabled = true,
+                        onClick = { navController.navigate("LogInScreen") })
+                )
             }
         }
     }

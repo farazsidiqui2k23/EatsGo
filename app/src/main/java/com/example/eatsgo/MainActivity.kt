@@ -16,8 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.eatsgo.ui.theme.EatsGoTheme
+import com.example.eatsgo.ui_screens.BoardingScreen
 import com.example.eatsgo.ui_screens.Welcome_scr
-import com.example.eatsgo.ui_screens.auth_screens.LoginUI
+import com.example.eatsgo.ui_screens.auth_screens.LogInScreen
 import com.example.eatsgo.ui_screens.auth_screens.SignUpScreen
 
 
@@ -27,8 +28,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EatsGoTheme {
-
-
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     EatsGo(modifier = Modifier.padding(innerPadding), this)
@@ -47,7 +46,6 @@ class MainActivity : ComponentActivity() {
 //                }
 
 
-
             }
         }
     }
@@ -58,28 +56,23 @@ fun EatsGo(modifier: Modifier = Modifier, context: Context) {
 
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "WelcomeScreen"){
-        composable("WelcomeScreen"){
-Welcome_scr(navController, modifier)
+    NavHost(navController = navController, startDestination = "BoardingScreen") {
+        composable("BoardingScreen"){
+            BoardingScreen(navController, modifier)
         }
-        composable("SignUpScreen"){
+        composable("WelcomeScreen") {
+            Welcome_scr(navController, modifier)
+        }
+        composable("SignUpScreen") {
+            SignUpScreen(context, navController, modifier)
+        }
+        composable("LogInScreen") {
+            LogInScreen(context, navController, modifier)
+        }
 
-        }
-        composable("LogInScreen"){
-
-        }
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
-        composable("WelcomeScreen"){}
 
 
     }
-
 }
 
 @Preview(showBackground = true)

@@ -75,7 +75,7 @@ import com.example.eatsgo.ui_screens.SenhaOutputTransformation
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun LoginUI(context: Context, navController: NavController, modifier: Modifier = Modifier) {
+fun LogInScreen(context: Context, navController: NavController, modifier: Modifier = Modifier) {
 
     MainUILayout(
         modifier = modifier,
@@ -92,12 +92,10 @@ fun LoginUI(context: Context, navController: NavController, modifier: Modifier =
 @Composable
 fun LoginCardLayout(navController: NavController, modifier: Modifier = Modifier) {
 
-
     var email = rememberTextFieldState()
     var password = rememberTextFieldState()
 
     var passVisibility by rememberSaveable { mutableStateOf(false) }
-
 
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
@@ -121,7 +119,6 @@ fun LoginCardLayout(navController: NavController, modifier: Modifier = Modifier)
             focusManager.clearFocus()
         }
     }
-
 
     Card(
         colors = CardDefaults.cardColors(Cream),
@@ -158,7 +155,6 @@ fun LoginCardLayout(navController: NavController, modifier: Modifier = Modifier)
                     imeAction = ImeAction.Next
                 )
             )
-
 
             Text(
                 text = "Password",
@@ -280,6 +276,7 @@ fun LoginCardLayout(navController: NavController, modifier: Modifier = Modifier)
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
                     color = OrangeBase,
                     fontWeight = FontWeight.Thin,
+                    modifier = Modifier.clickable(enabled = true, onClick = {navController.navigate("SignUpScreen")})
                     )
             }
         }
