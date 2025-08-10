@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.OrangeBase
@@ -33,7 +34,7 @@ import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
 
 @Composable
-fun Welcome_scr(modifier: Modifier = Modifier) {
+fun Welcome_scr(navController: NavController, modifier: Modifier = Modifier) {
 
     Column(
         modifier
@@ -43,50 +44,52 @@ fun Welcome_scr(modifier: Modifier = Modifier) {
 
     ) {
 
-
         Spacer(modifier.height(200.dp))
         Image(
             painter = painterResource(id = R.drawable.login_screen_logo),
             contentDescription = "logo", modifier = Modifier.size(202.dp, 179.dp)
         )
-        Spacer(modifier= Modifier.height(25.dp))
+        Spacer(modifier = Modifier.height(25.dp))
         Text(
             text = "Hot Meals. Fast Wheels.\nDelivered Fresh.",
             color = Cream, textAlign = TextAlign.Center, fontSize = 18.sp
         )
 
-        Spacer(modifier= Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         Button(
             modifier = Modifier
                 .width(250.dp)
                 .height(50.dp),
-            onClick = {}, colors = ButtonColors(
+            onClick = {
+                navController.navigate("LogInScreen")
+            }, colors = ButtonColors(
                 containerColor = YellowBase, contentColor = OrangeBase,
                 disabledContainerColor = Color.White,
                 disabledContentColor = Color.White
             )
         ) { Text("Log In", fontFamily = FontFamily(Font(R.font.poppins_medium)), fontSize = 22.sp) }
 
-        Spacer(modifier =  Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
         Button(
             modifier = Modifier
                 .width(250.dp)
                 .height(50.dp),
-            onClick = {}, colors = ButtonColors(
+            onClick = {
+                navController.navigate("SignUpScreen")
+            }, colors = ButtonColors(
                 containerColor = Yellow2, contentColor = OrangeBase,
                 disabledContainerColor = Color.White,
                 disabledContentColor = Color.White
             )
-        ) { Text("Sign Up", fontFamily = FontFamily(Font(R.font.poppins_medium)), fontSize = 22.sp) }
-
+        ) {
+            Text(
+                "Sign Up",
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                fontSize = 22.sp
+            )
+        }
     }
 }
 
-
-//@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-//@Composable
-//fun Ui() {
-//    Welcome_scr()
-//}
