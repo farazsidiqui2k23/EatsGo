@@ -51,6 +51,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -71,6 +72,7 @@ import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
+import com.example.eatsgo.ui_screens.MainLayout
 import com.example.eatsgo.ui_screens.SenhaOutputTransformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -81,10 +83,23 @@ import kotlinx.coroutines.launch
 @Composable
 fun Login_Scr(modifier: Modifier = Modifier) {
 
+    MainLayout(
+        modifier = modifier,
+        title = "Log In",
+        changeTitle = "Hello",
+        content = { LoginCardLayout(modifier) }
+    ) {
+
+    }
+
+}
+
+@Composable
+fun LoginCardLayout(modifier: Modifier = Modifier) {
+
+
     var email = rememberTextFieldState()
     var password = rememberTextFieldState()
-
-    var heading by rememberSaveable { mutableStateOf("Log In") }
 
     var passVisibility by rememberSaveable { mutableStateOf(false) }
 
@@ -112,210 +127,166 @@ fun Login_Scr(modifier: Modifier = Modifier) {
         }
     }
 
-    val composableScope = rememberCoroutineScope()
-    composableScope.launch {
-        delay(2000)
-        heading = "Hello"
-    }
 
-    Box(
-        modifier
-            .fillMaxSize()
-            .background(YellowBase)
+    Card(
+        colors = CardDefaults.cardColors(Cream),
+        shape = RoundedCornerShape(20.dp, 20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) {
-        Column(modifier.fillMaxSize()) {
+        Column(modifier.padding(32.dp, 0.dp)) {
+
+            Text(
+                text = "Welcome",
+                fontSize = 26.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                color = Brown
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Email",
+                fontSize = 18.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                color = Brown
+            )
+
+            BasicTextField(
+                modifier = input_modifier,
+                state = email,
+                cursorBrush = SolidColor(OrangeBase),
+                textStyle = TextStyle(
+                    color = Brown, fontSize = 16.sp
+                ),
+                lineLimits = TextFieldLineLimits.SingleLine,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next
+                )
+            )
+
+
+            Text(
+                text = "Password",
+                fontSize = 18.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                color = Brown
+            )
+            BasicTextField(password,
+                input_modifier,
+                cursorBrush = SolidColor(OrangeBase),
+                textStyle = TextStyle(
+                    color = Brown, fontSize = 16.sp
+                ),
+                lineLimits = TextFieldLineLimits.SingleLine,
+                decorator = { innerTextField ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Box(modifier = Modifier.weight(1f)) {
+                            innerTextField()
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        IconButton(
+                            onClick = { passVisibility = !passVisibility },
+                            modifier = Modifier
+                                .then(Modifier.size(24.dp))
+                        ) {
+                            Icon(
+                                if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = "", tint = OrangeBase
+                            )
+                        }
+
+                    }
+                },
+                outputTransformation = if (!passVisibility) {
+                    SenhaOutputTransformation()
+                } else {
+                    null
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(.15f)
-                    .padding(12.dp, 12.dp, 12.dp, 32.dp),
-                contentAlignment = Alignment.CenterStart
+                    .fillMaxWidth(), contentAlignment = Alignment.TopEnd
             ) {
-                IconButton(onClick = {}) {
-                    Icon(
-                        Icons.Default.ArrowBack,
-                        contentDescription = "",
-                        modifier = Modifier.size(30.dp),
-                        tint = OrangeBase
-                    )
-                }
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Text(
-                        text = heading,
-                        fontFamily = FontFamily(Font(R.font.poppins_bold)),
-                        fontSize = 26.sp,
-                        color = Cream
-                    )
-                }
+                Text(
+                    text = "Forget Password",
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)), color = OrangeBase
+                )
             }
-            Card(
-                colors = CardDefaults.cardColors(Cream),
-                shape = RoundedCornerShape(20.dp, 20.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            ) {
-                Column(modifier.padding(32.dp, 0.dp)) {
 
-                    Text(
-                        text = "Welcome",
-                        fontSize = 26.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_bold)),
-                        color = Brown
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Email",
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                        color = Brown
-                    )
+            Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
 
-                    BasicTextField(
-                        modifier = input_modifier,
-                        state = email,
-                        cursorBrush = SolidColor(OrangeBase),
-                        textStyle = TextStyle(
-                            color = Brown, fontSize = 16.sp
-                        ),
-                        lineLimits = TextFieldLineLimits.SingleLine,
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next
-                        )
-                    )
-
-
-                    Text(
-                        text = "Password",
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                        color = Brown
-                    )
-                    BasicTextField(password,
-                        input_modifier,
-                        cursorBrush = SolidColor(OrangeBase),
-                        textStyle = TextStyle(
-                            color = Brown, fontSize = 16.sp
-                        ),
-                        lineLimits = TextFieldLineLimits.SingleLine,
-                        decorator = { innerTextField ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-                                Box(modifier = Modifier.weight(1f)) {
-                                    innerTextField()
-                                }
-                                Spacer(modifier = Modifier.width(12.dp))
-                                IconButton(
-                                    onClick = { passVisibility = !passVisibility },
-                                    modifier = Modifier
-                                        .then(Modifier.size(24.dp))
-                                ) {
-                                    Icon(
-                                        if (passVisibility) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = "", tint = OrangeBase
-                                    )
-                                }
-
-                            }
-                        },
-                        outputTransformation = if (!passVisibility) {
-                           SenhaOutputTransformation()
-                        } else {
-                            null
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done
-                        ))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-                    ) {
-                        Text(
-                            text = "Forget Password",
-                            fontSize = 16.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium)), color = OrangeBase
-                        )
-                    }
-
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                                Button(
-                                    modifier = Modifier
-                                        .height(50.dp)
-                                        .width(220.dp),
-                                    onClick = {}, colors = ButtonColors(
-                                        containerColor = OrangeBase, contentColor = Cream,
-                                        disabledContainerColor = Color.White,
-                                        disabledContentColor = Color.White
-                                    )
-                                ) {
-                                    Text(
-                                        "Log In",
-                                        fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                                        fontSize = 20.sp
-                                    )
-                                }
-                            }
-
-                            Text(
-                                text = "or",
-                                color = Brown,
-                                modifier = Modifier.padding(0.dp, 20.dp)
+                        Button(
+                            modifier = Modifier
+                                .height(50.dp)
+                                .width(220.dp),
+                            onClick = {}, colors = ButtonColors(
+                                containerColor = OrangeBase, contentColor = Cream,
+                                disabledContainerColor = Color.White,
+                                disabledContentColor = Color.White
                             )
-
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        color = Orange2,
-                                        shape = RoundedCornerShape(20.dp)
-                                    )
-                            ) {
-                                IconButton(onClick = {}) {
-                                    Icon(
-                                        Icons.Default.Fingerprint,
-                                        contentDescription = "Fingerprint",
-                                        modifier = Modifier.size(60.dp),
-                                        tint = OrangeBase
-
-                                    )
-                                }
-
-                            }
+                        ) {
+                            Text(
+                                "Log In",
+                                fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                                fontSize = 20.sp
+                            )
                         }
                     }
 
-                    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        Text(
-                            text = "Don't have an account? ",
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                            color = Brown,
-                            fontWeight = FontWeight.Thin
-                        )
-                        Text(
-                            text = "Sign Up",
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                            color = OrangeBase,
-                            fontWeight = FontWeight.Thin,
+                    Text(
+                        text = "or",
+                        color = Brown,
+                        modifier = Modifier.padding(0.dp, 20.dp)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = Orange2,
+                                shape = RoundedCornerShape(20.dp)
+                            )
+                    ) {
+                        IconButton(onClick = {}) {
+                            Icon(
+                                Icons.Default.Fingerprint,
+                                contentDescription = "Fingerprint",
+                                modifier = Modifier.size(60.dp),
+                                tint = OrangeBase
 
                             )
+                        }
+
                     }
                 }
             }
+
+            Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text(
+                    text = "Don't have an account? ",
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                    color = Brown,
+                    fontWeight = FontWeight.Thin
+                )
+                Text(
+                    text = "Sign Up",
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                    color = OrangeBase,
+                    fontWeight = FontWeight.Thin,
+
+                    )
+            }
         }
     }
-
 }
-
-//@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-//@Composable
-//fun Ui() {
-//    Login_Scr()
-//}
