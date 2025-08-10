@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class,
+    ExperimentalLayoutApi::class
+)
 
 package com.example.eatsgo.ui_screens.auth_screens
 
@@ -164,7 +166,8 @@ fun LoginCardLayout(navController: NavController, modifier: Modifier = Modifier)
                 fontFamily = FontFamily(Font(R.font.poppins_medium)),
                 color = Brown
             )
-            BasicTextField(password,
+            BasicTextField(
+                password,
                 input_modifier,
                 cursorBrush = SolidColor(OrangeBase),
                 textStyle = TextStyle(
