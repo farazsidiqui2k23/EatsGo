@@ -84,7 +84,7 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun MainLayout(modifier: Modifier = Modifier, title: String,changeTitle:String, content: @Composable () -> Unit, onBack:()-> Unit) {
+fun MainUILayout(modifier: Modifier = Modifier, title: String,changeTitle:String, content: @Composable () -> Unit, onBack:()-> Unit) {
 
     var heading by rememberSaveable { mutableStateOf(title) }
 
@@ -133,40 +133,4 @@ fun MainLayout(modifier: Modifier = Modifier, title: String,changeTitle:String, 
             }
         }
     }
-
-}
-
-@Preview(showSystemUi = true, device = Devices.PIXEL_7_PRO)
-@Composable
-fun Ui() {
-    val context = LocalContext.current
-    MainLayout(modifier = Modifier , "Order", "Hello", content = { cardTesting() }, onBack = {
-        Toast.makeText(
-            context,
-            "Back Pressed",
-            Toast.LENGTH_SHORT
-        ).show()})
-}
-
-@Composable
-fun cardTesting() {
-    Card {
-        var input = rememberTextFieldState()
-        BasicTextField(
-            state = input
-        )
-    }
-}
-
-
-@Composable
-fun LoginLayout(modifier: Modifier = Modifier) {
-
-    val context = LocalContext.current
-    MainLayout(modifier, "Order", "Hello", content = { cardTesting() }, onBack = {
-        Toast.makeText(
-            context,
-            "Back Pressed",
-            Toast.LENGTH_SHORT
-        ).show()})
 }
