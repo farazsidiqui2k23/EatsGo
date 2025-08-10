@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
@@ -58,7 +59,7 @@ import com.example.eatsgo.ui.theme.Yellow2
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BoardingScr(modifier: Modifier = Modifier) {
+fun BoardingScreen(navController: NavController, modifier: Modifier = Modifier) {
 
     var currentBoardIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -124,7 +125,7 @@ fun BoardingScr(modifier: Modifier = Modifier) {
                 if(isVisible){
                     Button(
                         onClick = {
-                            //here skip for login/sign ui
+                            navController.navigate("WelcomeScreen")
                         }, colors = ButtonColors(
                             containerColor = OrangeBase, contentColor = Cream,
                             disabledContainerColor = Color.Transparent,
@@ -137,11 +138,13 @@ fun BoardingScr(modifier: Modifier = Modifier) {
             Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.BottomEnd) {
 
                 BoardingMenu(
+                    navController = navController,
                     currentBoardIndex = currentBoardIndex,
                     iconId = cardIcon,
                     title = cardTitle,
                     desc = cardDesc,
-                    btn_txt = cardBtnText
+                    btn_txt = cardBtnText,
+                    readyForNavigation = isVisible
                 ) { index ->
                     currentBoardIndex = index
                 }
@@ -153,13 +156,16 @@ fun BoardingScr(modifier: Modifier = Modifier) {
 
 @Composable
 fun BoardingMenu(
+    navController: NavController,
     currentBoardIndex: Int,
     iconId: Int,
     title: String,
     desc: String,
     btn_txt: String,
+    readyForNavigation:Boolean,
     onclick: (currentIndex: Int) -> Unit
 ) {
+    var NavigateToWelcome = rememberSaveable { mutableStateOf(false) }
     val boardingItem = (0..2).toList()
     Card(
         modifier = Modifier
@@ -203,28 +209,27 @@ fun BoardingMenu(
                             .clip(CircleShape)
                             .background(if (index == currentBoardIndex) OrangeBase else Yellow2)
                             .clickable { onclick(index) }
-
                     )
-
                 }
-
-
             }
 
             Button(
+
                 onClick = {
+                    if(!readyForNavigation){
+                        navController.navigate("WelcomeScreen")
+                    }
 
+                    else{
+                        when (currentBoardIndex) {
+                            0 -> {
+                                onclick(1)
+                            }
 
-                    when (currentBoardIndex) {
-                        0 -> {
-                            onclick(1)
+                            1 -> {
+                                onclick(2)
+                            }
                         }
-
-                        1 -> {
-                            onclick(2)
-                        }
-
-                        2 -> {}
                     }
 
 
