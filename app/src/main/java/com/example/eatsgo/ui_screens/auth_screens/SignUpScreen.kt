@@ -42,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -62,6 +63,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.eatsgo.Firebase.AuthState
+import com.example.eatsgo.Firebase.AuthViewModel
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
@@ -73,13 +76,13 @@ import com.example.eatsgo.ui_screens.SenhaOutputTransformation
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SignUpScreen(context: Context, navController: NavController, modifier: Modifier = Modifier) {
+fun SignUpScreen(authViewModel: AuthViewModel, context: Context, navController: NavController, modifier: Modifier = Modifier) {
 
     MainUILayout(
         modifier = modifier,
         title = "Sign Up",
         changeTitle = "New Account",
-        content = { SignUpCardLayout(navController, modifier) }
+        content = { SignUpCardLayout(context, authViewModel, navController, modifier) }
     ) {
         //onback functionality
         Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
@@ -87,7 +90,7 @@ fun SignUpScreen(context: Context, navController: NavController, modifier: Modif
 }
 
 @Composable
-fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier) {
+fun SignUpCardLayout(context: Context, authViewModel: AuthViewModel, navController: NavController, modifier: Modifier = Modifier) {
 
     var email = rememberTextFieldState()
     var password = rememberTextFieldState()
@@ -117,6 +120,21 @@ fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier
     LaunchedEffect(isKeyboardVisible) {
         if (!isKeyboardVisible) {
             focusManager.clearFocus()
+        }
+    }
+
+    val userState = authViewModel.authState.observeAsState()
+    LaunchedEffect(userState.value){
+        when (userState.value) {
+            is AuthState.Authenticated -> {
+                navController.navigate("LogInScreen")
+            }
+            is AuthState.onFailure -> {
+                Toast.makeText(context, (userState.value as AuthState.onFailure).message, Toast.LENGTH_SHORT).show()
+            }
+            else ->{
+                Unit
+            }
         }
     }
 
@@ -334,6 +352,14 @@ fun SignUpCardLayout(navController: NavController, modifier: Modifier = Modifier
                     modifier = Modifier
                         .height(50.dp),
                     onClick = {
+
+                        authViewModel.UserSignUp(
+                            email = email.text.toString(),
+                            password = password.text.toString(),
+                            name = full_name.text.toString(),
+                            contact = mobile_no.text.toString(),
+                            dob = date_of_birth.text.toString()
+                        )
 
                     }, colors = ButtonColors(
                         containerColor = OrangeBase, contentColor = Cream,
