@@ -102,12 +102,12 @@ fun LoginCardLayout(context: Context, authViewModel: AuthViewModel, navControlle
 
     val userState = authViewModel.authState.observeAsState()
     LaunchedEffect(userState.value){
-        when (userState.value) {
+        when (val state = userState.value) {
             is AuthState.Authenticated -> {
                 navController.navigate("HomeScreen")
             }
             is AuthState.onFailure -> {
-            Toast.makeText(context, (userState.value as AuthState.onFailure).message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, state.message.getContentIfNotObserved(), Toast.LENGTH_SHORT).show()
             }
             else ->{
                 Unit
