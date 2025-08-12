@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 
 class AuthViewModel : ViewModel() {
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -25,24 +24,27 @@ class AuthViewModel : ViewModel() {
     }
 
     fun UserLogIn(email: String, password: String) {
+        println("going to check")
         if (email.isBlank() && password.isBlank()) {
             _authState.value = AuthState.onFailure("Missing fields")
         }
-
-        _authState.value = AuthState.onLoading
-
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _authState.value = AuthState.Authenticated
-                } else {
-                    _authState.value =
-                        AuthState.onFailure(task.exception?.message ?: "something went wrong")
+        else{
+            _authState.value = AuthState.onLoading
+            println("going to login")
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        _authState.value = AuthState.Authenticated
+                    } else {
+                        _authState.value =
+                            AuthState.onFailure(task.exception?.message ?: "something went wrong")
+                    }
                 }
-            }
+        }
     }
 
     fun UserSignUp(email: String, password: String, name: String, contact: String, dob: String) {
+
         if (email.isBlank() && password.isBlank() && name.isBlank() && contact.isBlank() && dob.isBlank()) {
             _authState.value = AuthState.onFailure("Missing fields")
         }
@@ -76,6 +78,13 @@ class AuthViewModel : ViewModel() {
         auth.signOut()
         _authState.value = AuthState.Unauthenticated
     }
+
+    fun userData(){
+        val userId : String
+        val name : String
+        val contact : String
+        val dob : String
+    }
 }
 
 sealed class AuthState {
@@ -84,3 +93,7 @@ sealed class AuthState {
     object onLoading : AuthState()
     data class onFailure(val message: String) : AuthState()
 }
+
+data class (
+
+        )
