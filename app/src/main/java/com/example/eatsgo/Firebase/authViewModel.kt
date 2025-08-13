@@ -62,7 +62,7 @@ class AuthViewModel : ViewModel() {
             println("Missing mob")
         }
         else if (password.length != 6) {
-            _authState.value = AuthState.onFailure(Event("Password should be 6 characters long"))
+            _authState.value = AuthState.onFailure(Event("Password must be 6 characters long"))
             println("Missing pass")
         }
 
