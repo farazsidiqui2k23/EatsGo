@@ -45,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -71,8 +72,12 @@ import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
+import com.example.eatsgo.ui_screens.AlertDialogBox
 import com.example.eatsgo.ui_screens.MainUILayout
 import com.example.eatsgo.ui_screens.SenhaOutputTransformation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -99,7 +104,7 @@ fun SignUpCardLayout(context: Context, authViewModel: AuthViewModel, navControll
     var date_of_birth = rememberTextFieldState()
 
     var passVisibility by rememberSaveable { mutableStateOf(false) }
-
+var openAlertDialog by rememberSaveable { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val isKeyboardVisible = WindowInsets.isImeVisible
@@ -123,11 +128,20 @@ fun SignUpCardLayout(context: Context, authViewModel: AuthViewModel, navControll
         }
     }
 
+
+    val composableScope = rememberCoroutineScope()
     val userState = authViewModel.authState.observeAsState()
+    if(openAlertDialog){ AlertDialogBox(modifier, openAlertDialog) }
     LaunchedEffect(userState.value){
         when (val state = userState.value) {
             is AuthState.Authenticated -> {
-                navController.navigate("LogInScreen")
+
+                openAlertDialog = true
+                composableScope.launch {
+                    delay(3000)
+                    openAlertDialog = false
+                    navController.navigate("HomeScreen")
+                }
             }
             is AuthState.onFailure -> {
                 Toast.makeText(context, state.message.getContentIfNotObserved(), Toast.LENGTH_SHORT).show()
