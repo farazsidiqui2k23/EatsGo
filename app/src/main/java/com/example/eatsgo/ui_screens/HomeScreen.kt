@@ -48,8 +48,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -82,34 +87,45 @@ import com.google.firebase.components.Lazy
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
 
-    Box(
-        modifier
-            .fillMaxSize()
-            .background(YellowBase)
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(.2f)
-                    .padding(12.dp, 8.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                TopBar(modifier)
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                HomeCardLayout()
+    var whichDrawer by rememberSaveable { mutableIntStateOf(0) }
+    var drawerState by rememberSaveable { mutableStateOf(false) }
+
+    Box(){
+
+        Box(
+            modifier
+                .fillMaxSize()
+                .background(YellowBase)
+        ) {
+
+            Column(modifier = Modifier.fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.2f)
+                        .padding(12.dp, 8.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    TopBar(modifier) { index, state ->
+                        whichDrawer = index
+                        drawerState = state
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    HomeCardLayout()
+                }
             }
         }
+        NavigationDrawerScreen(modifier, drawerState, whichDrawer)
     }
 }
 
 
 @Composable
-fun TopBar(modifier: Modifier = Modifier) {
+fun TopBar(modifier: Modifier = Modifier, navDrawer : (itemIndex : Int, itemState : Boolean)-> Unit) {
 
     val search = rememberTextFieldState()
 
@@ -185,7 +201,9 @@ fun TopBar(modifier: Modifier = Modifier) {
                 items(icon_index) { index ->
 
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            navDrawer(index, true)
+                        },
                         modifier = Modifier
                             .background(Cream, RoundedCornerShape(16.dp))
                             .size(38.dp)
