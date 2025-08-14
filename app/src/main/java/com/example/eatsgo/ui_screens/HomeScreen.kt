@@ -2,9 +2,11 @@
 
 package com.example.eatsgo.ui_screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,22 +19,29 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DeliveryDining
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -48,12 +57,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,6 +72,8 @@ import androidx.compose.ui.unit.sp
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
+import com.example.eatsgo.ui.theme.Gray
+import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
@@ -213,8 +226,33 @@ fun HomeCardLayout(modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(Cream),
         shape = RoundedCornerShape(20.dp, 20.dp)
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        LazyColumn(modifier = Modifier.padding(20.dp)) {
+            item {
+
             MenuCard(modifier)
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Orange2)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TopDeals(modifier)
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(Orange2)
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Restaurants(modifier)
+        }
         }
     }
 }
@@ -234,7 +272,8 @@ fun MenuCard(modifier: Modifier = Modifier) {
 
     LazyRow(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         items(list) { index ->
-            IconButton(onClick = {},
+            IconButton(
+                onClick = {},
                 modifier = Modifier
                     .size(56.dp, 70.dp)
                     .background(Yellow2, RoundedCornerShape(20.dp))
@@ -248,9 +287,165 @@ fun MenuCard(modifier: Modifier = Modifier) {
             }
         }
     }
+}
 
-    Spacer(modifier= Modifier.fillMaxWidth().height(1.dp).background(OrangeBase).padding(0.dp,20.dp))
+@Composable
+fun TopDeals(modifier: Modifier = Modifier) {
+    val displayedDeal = (0..4).toList()
+    Column {
+        Text(
+            text = "Top Notch Deals",
+            fontSize = 18.sp,
+            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+            color = Brown
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(130.dp), colors = CardDefaults.cardColors(
+                OrangeBase
+            )
+        ) {
 
+            Row {
+                Box(modifier = Modifier.fillMaxWidth(.5f)) {
+                    //ofer desc
+                    Icon(
+                        painter = painterResource(R.drawable.hole_circle),
+                        contentDescription = "",
+                        tint = YellowBase,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .offset(x = 120.dp, y = -30.dp)
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.hole_circle),
+                        contentDescription = "",
+                        tint = YellowBase,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .offset(x = -20.dp, y = 100.dp)
+                    )
+                    Column(
+                        modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Experience our",
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            fontSize = 14.sp,
+                            color = Cream
+                        )
+                        Text(
+                            text = "delicious new deal",
+                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                            fontSize = 14.sp,
+                            color = Cream,
+                            modifier = Modifier.offset(x = 0.dp, y = -8.dp)
+                        )
+                        Text(
+                            text = "30% OFF",
+                            fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                            fontSize = 28.sp,
+                            color = Cream
+                        )
+
+
+                    }
+                }
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    // image
+                    Image(
+                        painter = painterResource(id = R.drawable.dishoffer),
+                        contentDescription = "Deals Image",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+        }
+        Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+            LazyRow(modifier = Modifier.padding(0.dp, 14.dp)) {
+                items(displayedDeal) { index ->
+                    Box(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .height(8.dp)
+                            .width(24.dp)
+                            .clip(CircleShape)
+                            .background(Yellow2)
+
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun Restaurants(modifier: Modifier = Modifier) {
+
+    Column {
+        Text(
+            text = "Explore Restaurants",
+            fontSize = 18.sp,
+            fontFamily = FontFamily(Font(R.font.poppins_medium)),
+            color = Brown
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        //lazy column for restaurants
+
+        Column {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp), colors = CardDefaults.cardColors(
+                    OrangeBase
+                )
+            ) {
+
+            }
+            Text(
+                text = "Ijaz Pakwan",
+                fontSize = 20.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_semi_bold)),
+                color = Brown
+            )
+            Text(
+                text = "- Rice - Biryani - Pizza - Roll",
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                color = YellowBase
+            )
+            Row(modifier.fillMaxWidth(.8f),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Icon(Icons.Default.Star, contentDescription = "Rating", tint = OrangeBase)
+                Text(
+                    text = "4.5",
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                    fontSize = 16.sp,
+                    color = Brown
+                )
+                Icon(Icons.Default.DeliveryDining, contentDescription = "Delivery", tint = OrangeBase)
+                Text(
+                    text = "Free",
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                    fontSize = 16.sp,
+                    color = Brown
+                )
+                Icon(Icons.Default.AccessTimeFilled, contentDescription = "Time", tint = OrangeBase)
+                Text(
+                    text = "10 min",
+                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                    fontSize = 16.sp,
+                    color = Brown
+                )
+            }
+        }
+
+    }
 }
 
 @Preview(apiLevel = 34, showSystemUi = true, device = "id:pixel_8_pro")
