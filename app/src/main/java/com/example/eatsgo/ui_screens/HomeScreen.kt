@@ -48,6 +48,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -63,6 +64,7 @@ import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
+import com.google.firebase.components.Lazy
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -86,7 +88,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-HomeCardLayout()
+                HomeCardLayout()
             }
         }
     }
@@ -117,7 +119,7 @@ fun TopBar(modifier: Modifier = Modifier) {
 
     val icons =
         mutableListOf(Icons.Default.ShoppingCart, Icons.Default.Notifications, Icons.Default.Person)
-val icon_index = (0..2).toList()
+    val icon_index = (0..2).toList()
     Column {
         Row {
             Box(modifier = Modifier.fillMaxWidth(.58f)) {
@@ -206,9 +208,50 @@ val icon_index = (0..2).toList()
 
 @Composable
 fun HomeCardLayout(modifier: Modifier = Modifier) {
-    Card(modifier.fillMaxSize(), colors = CardDefaults.cardColors(Cream), shape = RoundedCornerShape(20.dp, 20.dp)) {  }
+    Card(
+        modifier.fillMaxSize(),
+        colors = CardDefaults.cardColors(Cream),
+        shape = RoundedCornerShape(20.dp, 20.dp)
+    ) {
+        Column(modifier = Modifier.padding(20.dp)) {
+            MenuCard(modifier)
+        }
+    }
 }
 
+@Composable
+fun MenuCard(modifier: Modifier = Modifier) {
+
+    val FoodIcons = mutableListOf(
+        R.drawable.burger_icon,
+        R.drawable.meal_icon,
+        R.drawable.pizza_icon,
+        R.drawable.desert_icon,
+        R.drawable.drink_icon
+    )
+
+    val list = (0..4).toList()
+
+    LazyRow(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        items(list) { index ->
+            IconButton(onClick = {},
+                modifier = Modifier
+                    .size(56.dp, 70.dp)
+                    .background(Yellow2, RoundedCornerShape(20.dp))
+            ) {
+                Icon(
+                    painter = painterResource(id = FoodIcons[index]),
+                    contentDescription = "",
+                    tint = OrangeBase,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+        }
+    }
+
+    Spacer(modifier= Modifier.fillMaxWidth().height(1.dp).background(OrangeBase).padding(0.dp,20.dp))
+
+}
 
 @Preview(apiLevel = 34, showSystemUi = true, device = "id:pixel_8_pro")
 @Composable
