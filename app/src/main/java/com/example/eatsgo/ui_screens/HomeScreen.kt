@@ -229,30 +229,36 @@ fun HomeCardLayout(modifier: Modifier = Modifier) {
         LazyColumn(modifier = Modifier.padding(20.dp)) {
             item {
 
-            MenuCard(modifier)
+                MenuCard(modifier)
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Orange2)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Orange2)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-            TopDeals(modifier)
+                TopDeals(modifier)
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Orange2)
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Orange2)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-            Restaurants(modifier)
-        }
+                Restaurants(modifier)
+                Restaurants(modifier)
+                Restaurants(modifier)
+                Restaurants(modifier)
+                Restaurants(modifier)
+
+
+            }
         }
     }
 }
@@ -366,7 +372,7 @@ fun TopDeals(modifier: Modifier = Modifier) {
                 }
             }
         }
-        Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+        Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             LazyRow(modifier = Modifier.padding(0.dp, 14.dp)) {
                 items(displayedDeal) { index ->
                     Box(
@@ -406,7 +412,12 @@ fun Restaurants(modifier: Modifier = Modifier) {
                     OrangeBase
                 )
             ) {
-
+                Image(
+                    painter = painterResource(R.drawable.dish),
+                    contentDescription = "Dummy Img",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
             }
             Text(
                 text = "Ijaz Pakwan",
@@ -420,7 +431,11 @@ fun Restaurants(modifier: Modifier = Modifier) {
                 fontFamily = FontFamily(Font(R.font.poppins_regular)),
                 color = YellowBase
             )
-            Row(modifier.fillMaxWidth(.8f),verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier.fillMaxWidth(.8f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Icon(Icons.Default.Star, contentDescription = "Rating", tint = OrangeBase)
                 Text(
                     text = "4.5",
@@ -428,7 +443,11 @@ fun Restaurants(modifier: Modifier = Modifier) {
                     fontSize = 16.sp,
                     color = Brown
                 )
-                Icon(Icons.Default.DeliveryDining, contentDescription = "Delivery", tint = OrangeBase)
+                Icon(
+                    Icons.Default.DeliveryDining,
+                    contentDescription = "Delivery",
+                    tint = OrangeBase
+                )
                 Text(
                     text = "Free",
                     fontFamily = FontFamily(Font(R.font.poppins_medium)),
