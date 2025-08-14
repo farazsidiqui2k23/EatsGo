@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.Orange2
+import com.example.eatsgo.ui.theme.YellowBase
 import com.example.eatsgo.ui_screens.HomeScreen
 
 @Composable
@@ -63,7 +64,7 @@ fun NotificationDrawerContent(modifier: Modifier = Modifier) {
 
 
         }
-
+        Divider(color = YellowBase)
         LazyColumn { items(notifications){ notification ->
 
                 Text(
