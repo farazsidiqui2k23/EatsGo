@@ -3,9 +3,15 @@
 package com.example.eatsgo.ui_screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -35,9 +42,17 @@ import com.example.eatsgo.ui.theme.YellowBase
 import kotlinx.coroutines.launch
 
 @Composable
-fun NavigationDrawerScreen(modifier: Modifier = Modifier, drawerState: Boolean, drawerContent : Int) {
+fun NavigationDrawerScreen(modifier: Modifier = Modifier, drawerState: Boolean, drawerContent : Int, swipeRight:(drawerState : Boolean)->Unit) {
 
-    AnimatedVisibility(visible = drawerState) {
+    AnimatedVisibility(visible = drawerState,
+        enter = slideInHorizontally(
+        initialOffsetX = { fullWidth -> fullWidth }, // start off-screen to the right
+        animationSpec = tween(durationMillis = 300)
+    ),
+        exit = slideOutHorizontally(
+            targetOffsetX = { fullWidth -> fullWidth }, // slide back to right
+            animationSpec = tween(durationMillis = 300)
+        )) {
         Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth())
         {
             Box(
@@ -49,6 +64,7 @@ fun NavigationDrawerScreen(modifier: Modifier = Modifier, drawerState: Boolean, 
                         shape = RoundedCornerShape(topStart = 40.dp, bottomStart = 40.dp)
                     )
                     .padding(22.dp)
+                    .swipeToClose { swipeRight(false) }
             ) {
 
                 ProfileDrawerContent(modifier)
@@ -131,3 +147,19 @@ fun DrawerItem(icon: ImageVector, text: String) {
     }
 }
 
+@Composable
+fun Modifier.swipeToClose(onSwipeLeft: () -> Unit): Modifier {
+    return this.pointerInput(Unit) {
+        detectHorizontalDragGestures { change, dragAmount ->
+            if (dragAmount > 50) { // dragged left
+                onSwipeLeft()
+            }
+        }
+    }
+}
+@Composable
+fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier {
+    return this.pointerInput(Unit) {
+        detectTapGestures(onTap = { onClick() })
+    }
+}

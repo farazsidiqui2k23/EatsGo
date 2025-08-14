@@ -90,6 +90,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     var whichDrawer by rememberSaveable { mutableIntStateOf(0) }
     var drawerState by rememberSaveable { mutableStateOf(false) }
 
+
+
     Box(){
 
         Box(
@@ -119,7 +121,17 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-        NavigationDrawerScreen(modifier, drawerState, whichDrawer)
+        if (drawerState) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f))
+                    .noRippleClickable { drawerState = false } // tap outside closes
+            )
+        }
+        NavigationDrawerScreen(modifier, drawerState, whichDrawer){state ->
+            drawerState = state
+        }
     }
 }
 
