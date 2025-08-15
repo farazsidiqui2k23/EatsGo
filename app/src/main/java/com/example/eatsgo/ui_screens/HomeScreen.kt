@@ -2,11 +2,14 @@
 
 package com.example.eatsgo.ui_screens
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,6 +29,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -33,9 +37,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AccessTimeFilled
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeliveryDining
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -44,13 +46,15 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,6 +62,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -69,20 +74,25 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.eatsgo.Firebase.AuthState
+import com.example.eatsgo.Firebase.AuthViewModel
+import com.example.eatsgo.Firebase.RealtimeDB
+import com.example.eatsgo.Firebase.userData
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
-import com.example.eatsgo.ui.theme.Gray
 import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
-import com.google.firebase.components.Lazy
+import com.example.eatsgo.ui_screens.drawer_screens.NavigationDrawerScreen
+import com.example.eatsgo.ui_screens.drawer_screens.noRippleClickable
+import androidx.compose.ui.graphics.BlendMode
+
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -91,8 +101,42 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     var drawerState by rememberSaveable { mutableStateOf(false) }
 
 
+    val authViewModel = viewModel<AuthViewModel>()
 
-    Box(){
+    var userProfileInfo: userData? by remember { mutableStateOf(null) }
+
+    val RealtimeDB = authViewModel.realtimeDB.observeAsState()
+    val userId = authViewModel.auth.currentUser!!.uid
+
+    LaunchedEffect(Unit){ authViewModel.getProfileData(userId) }
+
+
+    LaunchedEffect(RealtimeDB.value){
+        when (val data = RealtimeDB.value) {
+            is RealtimeDB.onFailure -> {
+//                Toast.makeText(context, data.message, Toast.LENGTH_SHORT).show()
+            }
+
+            is RealtimeDB.onSuccess -> {
+                println(data.userData)
+                userProfileInfo = data.userData
+            }
+
+            is RealtimeDB.onLoading -> {
+
+//                Toast.makeText(context, "Loading...", Toast.LENGTH_SHORT).show()
+
+            }
+
+            null -> {
+                println("Still null")
+            }
+        }
+    }
+
+
+
+    Box() {
 
         Box(
             modifier
@@ -101,6 +145,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         ) {
 
             Column(modifier = Modifier.fillMaxSize()) {
+                //top Box
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -113,6 +158,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         drawerState = state
                     }
                 }
+                //card box
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -125,25 +171,36 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             Box(
                 Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f))
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            color = Orange2,
+                            blendMode = BlendMode.Multiply
+                        )
+                    }
                     .noRippleClickable { drawerState = false } // tap outside closes
             )
         }
-        NavigationDrawerScreen(modifier, drawerState, whichDrawer){state ->
-            drawerState = state
+        userProfileInfo?.let {
+            NavigationDrawerScreen(modifier, drawerState, whichDrawer, it) { state ->
+                drawerState = state
+            }
         }
     }
 }
 
 
 @Composable
-fun TopBar(modifier: Modifier = Modifier, navDrawer : (itemIndex : Int, itemState : Boolean)-> Unit) {
+fun TopBar(modifier: Modifier = Modifier, navDrawer: (itemIndex: Int, itemState: Boolean) -> Unit) {
 
     val search = rememberTextFieldState()
 
     val focusRequester = remember { FocusRequester() }
 
     val isKeyboardVisible = WindowInsets.isImeVisible
+
+    val targetWidth = if (isKeyboardVisible) 1f else .58f
+    val animatedTextField by animateFloatAsState(targetValue = targetWidth)
 
     val inputmodifier = Modifier
         .fillMaxWidth()
@@ -163,7 +220,7 @@ fun TopBar(modifier: Modifier = Modifier, navDrawer : (itemIndex : Int, itemStat
     val icon_index = (0..2).toList()
     Column {
         Row {
-            Box(modifier = Modifier.fillMaxWidth(.58f)) {
+            Box(modifier = Modifier.fillMaxWidth(animatedTextField)) {
                 BasicTextField(
                     state = search,
                     inputmodifier,
@@ -203,6 +260,7 @@ fun TopBar(modifier: Modifier = Modifier, navDrawer : (itemIndex : Int, itemStat
                     )
                 )
             }
+
 
             Spacer(modifier = Modifier.width(14.dp))
             LazyRow(
@@ -251,12 +309,14 @@ fun TopBar(modifier: Modifier = Modifier, navDrawer : (itemIndex : Int, itemStat
 
 @Composable
 fun HomeCardLayout(modifier: Modifier = Modifier) {
+    val listState = rememberLazyListState()
+    println("List State ${listState}")
     Card(
         modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(Cream),
         shape = RoundedCornerShape(20.dp, 20.dp)
     ) {
-        LazyColumn(modifier = Modifier.padding(20.dp)) {
+        LazyColumn(modifier = Modifier.padding(20.dp), state = listState) {
             item {
 
                 MenuCard(modifier)
@@ -497,8 +557,8 @@ fun Restaurants(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(apiLevel = 34, showSystemUi = true, device = "id:pixel_8_pro")
+@Preview(apiLevel = 35, showSystemUi = true, device = "id:pixel_8_pro")
 @Composable
 private fun UI() {
-    HomeScreen()
+  HomeScreen()
 }
