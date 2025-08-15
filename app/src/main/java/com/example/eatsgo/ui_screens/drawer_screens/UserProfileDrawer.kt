@@ -2,7 +2,9 @@ package com.example.eatsgo.ui_screens.drawer_screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,6 +38,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.eatsgo.Firebase.userData
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.Orange2
@@ -41,7 +46,20 @@ import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 
 @Composable
-fun ProfileDrawerContent(modifier: Modifier = Modifier) {
+fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData) {
+
+    val drawerItems = listOf(
+        Pair(Icons.Default.ShoppingBag, "My Orders"),
+        Pair(Icons.Default.Person, "My Profile"),
+        Pair(Icons.Default.Home, "Delivery Address"),
+        Pair(Icons.Default.Payment, "Payment Methods"),
+        Pair(Icons.Default.Call, "Contact Us"),
+        Pair(Icons.Default.Help, "Help & FAQs"),
+        Pair(Icons.Default.Settings, "Settings"),
+        Pair(Icons.Default.ExitToApp, "Log Out")
+    )
+
+
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.Start, modifier = Modifier
@@ -58,44 +76,49 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.width(10.dp))
             Column {
                 Text(
-                    "John Smith",
+                    userData.name,
                     color = Cream,
                     fontFamily = FontFamily(Font(R.font.poppins_semi_bold)),
                     fontSize = 18.sp
                 )
                 Text(
-                    "loremipsum@email.com", color = Cream, fontSize = 12.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular))
+                    userData.email, color = Cream, fontSize = 12.sp,
+                    fontFamily = FontFamily(Font(R.font.poppins_regular)), maxLines = 1
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        DrawerItem(Icons.Default.ShoppingBag, "My Orders")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        DrawerItem(Icons.Default.Person, "My Profile")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        DrawerItem(Icons.Default.Home, "Delivery Address")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        DrawerItem(Icons.Default.Payment, "Payment Methods")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        DrawerItem(Icons.Default.Call, "Contact Us")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        DrawerItem(Icons.Default.Help, "Help & FAQs")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        DrawerItem(Icons.Default.Settings, "Settings")
-        Divider(color = Orange2.copy(alpha = 0.4f))
-        Spacer(modifier = Modifier.height(6.dp))
-        DrawerItem(Icons.Default.ExitToApp, "Log Out")
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            items(drawerItems) { item ->
+                DrawerItem(
+                    icon = item.first,
+                    text = item.second,
+                    onClick = {
+                        println("Clicked on: ${item.second}") // replace with your logic
+                    }
+                )
+                Divider(color = Orange2.copy(alpha = 0.4f))
+            }
+        }
 
     }
 }
 
 
 @Composable
-fun DrawerItem(icon: ImageVector, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+fun DrawerItem(
+    icon: ImageVector,
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clickable { onClick() } // detect click
+            .padding(vertical = 8.dp)
+    ) {
         Icon(
             icon, contentDescription = text, tint = OrangeBase, modifier = Modifier
                 .background(
