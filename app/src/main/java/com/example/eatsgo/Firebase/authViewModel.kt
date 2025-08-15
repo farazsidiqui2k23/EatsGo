@@ -4,14 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class AuthViewModel : ViewModel() {
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    val database = FirebaseDatabase.getInstance().reference.child("users")
+    val database = FirebaseDatabase.getInstance().getReference("users")
 
     val _authState = MutableLiveData<AuthState<Nothing>>()
     val authState: LiveData<AuthState<Nothing>> = _authState
+
+
+    val _realtimeDB = MutableLiveData<RealtimeDB>()
+    val realtimeDB : LiveData<RealtimeDB> = _realtimeDB
 
     init {
         checkUserStatus()
@@ -26,13 +33,13 @@ class AuthViewModel : ViewModel() {
     }
 
     fun UserLogIn(email: String, password: String) {
-        println("going to check")
+
         if (email.isBlank() && password.isBlank()) {
             _authState.value = AuthState.onFailure(Event("Missing Field"))
         }
         else{
             _authState.value = AuthState.onLoading
-            println("going to login")
+
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -50,20 +57,20 @@ class AuthViewModel : ViewModel() {
         if (email.isBlank() || password.isBlank() || name.isBlank() || contact.isBlank() || dob.isBlank()) {
 
             _authState.value = AuthState.onFailure(Event("Missing fields"))
-            println("Missing fields")
+
         }
         else if (!email.contains("@") || !email.contains(".")) {
 
             _authState.value = AuthState.onFailure(Event("Invalid email"))
-            println("Invalid mails")
+
         }
         else if (contact.length != 11) {
             _authState.value = AuthState.onFailure(Event("Invalid contact number"))
-            println("Missing mob")
+
         }
         else if (password.length != 6) {
             _authState.value = AuthState.onFailure(Event("Password must be 6 characters long"))
-            println("Missing pass")
+
         }
 
         else{
@@ -77,6 +84,7 @@ class AuthViewModel : ViewModel() {
                         val UserData = userData(
                             userId = userId.toString(),
                             name = name,
+                            email = email,
                             contact = contact,
                             dob = dob
                         )
@@ -103,6 +111,31 @@ class AuthViewModel : ViewModel() {
         _authState.value = AuthState.Unauthenticated
     }
 
+    fun getProfileData(userId: String){
+
+        val postListner =object : ValueEventListener{
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val data = snapshot.value as Map<*, *>
+                val userdata = userData(
+                    userId = data["userId"].toString(),
+                    name = data["name"].toString(),
+                    email = data["email"].toString(),
+                    contact = data["contact"].toString(),
+                    dob = data["dob"].toString()
+                )
+                _realtimeDB.value = RealtimeDB.onSuccess(userdata)
+            }
+            override fun onCancelled(error: DatabaseError) {
+                _realtimeDB.value = RealtimeDB.onFailure(error.toString())
+            }
+
+        }
+
+        _realtimeDB.value = RealtimeDB.onLoading
+        database.child(userId).addListenerForSingleValueEvent(postListner)
+    }
+
 }
 
 sealed class AuthState<T> {
@@ -112,9 +145,16 @@ sealed class AuthState<T> {
     data class onFailure(val message: Event<String>) : AuthState<Nothing>()
 }
 
+sealed class RealtimeDB{
+    data class onSuccess(val userData: userData) : RealtimeDB()
+    data class onFailure(val message : String) : RealtimeDB()
+    object onLoading : RealtimeDB()
+}
+
 data class userData(
     val userId : String,
     val name : String,
+    val email : String,
     val contact : String,
     val dob : String
         )
