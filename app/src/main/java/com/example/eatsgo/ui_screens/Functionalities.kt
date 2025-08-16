@@ -8,14 +8,10 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.KeyboardType.Companion.Text
 import androidx.compose.ui.unit.sp
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 
-class Functionalities() {
-
-}
 
 @Composable
 fun inputTitle(title: String) {
@@ -39,3 +35,5 @@ class SenhaOutputTransformation : OutputTransformation {
         replace(0, length, maskedText)
     }
 }
+
+

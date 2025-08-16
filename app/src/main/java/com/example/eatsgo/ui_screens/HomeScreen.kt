@@ -2,10 +2,6 @@
 
 package com.example.eatsgo.ui_screens
 
-import android.os.Build
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,7 +42,7 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -54,6 +50,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,7 +62,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -74,11 +71,10 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.eatsgo.Firebase.AuthState
+import androidx.navigation.NavController
 import com.example.eatsgo.Firebase.AuthViewModel
 import com.example.eatsgo.Firebase.RealtimeDB
 import com.example.eatsgo.Firebase.userData
@@ -91,14 +87,17 @@ import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
 import com.example.eatsgo.ui_screens.drawer_screens.NavigationDrawerScreen
 import com.example.eatsgo.ui_screens.drawer_screens.noRippleClickable
-import androidx.compose.ui.graphics.BlendMode
 
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
 
     var whichDrawer by rememberSaveable { mutableIntStateOf(0) }
     var drawerState by rememberSaveable { mutableStateOf(false) }
+
+    var progress by remember { mutableFloatStateOf(0f) }
+
+    val currentFraction by animateFloatAsState(0.2f - (progress * (0.2f - 0.1f)))
 
 
     val authViewModel = viewModel<AuthViewModel>()
@@ -118,7 +117,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             }
 
             is RealtimeDB.onSuccess -> {
-                println(data.userData)
+
                 userProfileInfo = data.userData
             }
 
@@ -149,7 +148,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(.2f)
+                        .fillMaxHeight(currentFraction)
                         .padding(12.dp, 8.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
@@ -163,7 +162,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    HomeCardLayout()
+                    HomeCardLayout(){ height ->
+                        progress = height.toFloat()
+                    }
                 }
             }
         }
@@ -181,8 +182,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     .noRippleClickable { drawerState = false } // tap outside closes
             )
         }
+        BotomBar(modifier, 0)
         userProfileInfo?.let {
-            NavigationDrawerScreen(modifier, drawerState, whichDrawer, it) { state ->
+            NavigationDrawerScreen(modifier, navController, drawerState, whichDrawer, it) { state ->
                 drawerState = state
             }
         }
@@ -308,46 +310,48 @@ fun TopBar(modifier: Modifier = Modifier, navDrawer: (itemIndex: Int, itemState:
 }
 
 @Composable
-fun HomeCardLayout(modifier: Modifier = Modifier) {
+fun HomeCardLayout(modifier: Modifier = Modifier, scrollProgress : (Int) -> Unit) {
     val listState = rememberLazyListState()
-    println("List State ${listState}")
+
+    val scrollPx = listState.firstVisibleItemScrollOffset
+    val progress = scrollPx / 100
+scrollProgress(progress)
+
+
     Card(
         modifier.fillMaxSize(),
         colors = CardDefaults.cardColors(Cream),
         shape = RoundedCornerShape(20.dp, 20.dp)
     ) {
-        LazyColumn(modifier = Modifier.padding(20.dp), state = listState) {
-            item {
+        Column() {
+            MenuCard(modifier)
+            LazyColumn(
+                modifier = Modifier.padding(20.dp, 20.dp, 20.dp, 64.dp),
+                state = listState,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                item {
 
-                MenuCard(modifier)
+                    Divider(color = Orange2.copy(alpha = 0.4f))
+                    TopDeals(modifier)
 
-                Spacer(modifier = Modifier.height(20.dp))
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Orange2)
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(Orange2)
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                TopDeals(modifier)
-
-                Spacer(modifier = Modifier.height(20.dp))
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(Orange2)
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Restaurants(modifier)
-                Restaurants(modifier)
-                Restaurants(modifier)
-                Restaurants(modifier)
-                Restaurants(modifier)
+                    Restaurants(modifier)
+                    Restaurants(modifier)
+                    Restaurants(modifier)
+                    Restaurants(modifier)
+                    Restaurants(modifier)
 
 
+                }
             }
         }
     }
@@ -366,7 +370,7 @@ fun MenuCard(modifier: Modifier = Modifier) {
 
     val list = (0..4).toList()
 
-    LazyRow(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+    LazyRow(modifier.fillMaxWidth().padding(12.dp,12.dp,12.dp,0.dp), horizontalArrangement = Arrangement.SpaceBetween) {
         items(list) { index ->
             IconButton(
                 onClick = {},
@@ -557,8 +561,3 @@ fun Restaurants(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(apiLevel = 35, showSystemUi = true, device = "id:pixel_8_pro")
-@Composable
-private fun UI() {
-  HomeScreen()
-}

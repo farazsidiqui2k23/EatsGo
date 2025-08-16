@@ -170,11 +170,3 @@ fun CartItem(modifier: Modifier = Modifier) {
 }
 
 
-@Preview(apiLevel = 34, showSystemUi = true, device = "id:pixel_8_pro")
-@Composable
-private fun UI() {
-   NavigationDrawerScreen(
-       drawerState = true,
-       drawerContent = 0
-   ) { }
-}

@@ -103,8 +103,3 @@ fun AlertDialogBox(modifier: Modifier = Modifier, openDialog: Boolean) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun ui() {
-//    AlertDialogBox(true)
-}

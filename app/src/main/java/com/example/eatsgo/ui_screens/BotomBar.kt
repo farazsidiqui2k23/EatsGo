@@ -81,8 +81,3 @@ fun BotomBar(modifier: Modifier = Modifier, BydefaultLoc: Int) {
     }
 }
 
-@Preview(apiLevel = 35, showSystemUi = true, device = "id:pixel_8_pro")
-@Composable
-private fun UI() {
-    HomeScreen()
-}

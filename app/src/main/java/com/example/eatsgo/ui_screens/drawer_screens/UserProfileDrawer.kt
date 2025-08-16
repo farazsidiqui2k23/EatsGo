@@ -1,10 +1,10 @@
 package com.example.eatsgo.ui_screens.drawer_screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +29,12 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,8 +51,27 @@ import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
 import com.example.eatsgo.ui.theme.Yellow2
 
+
 @Composable
-fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData) {
+fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData,onNavigate: (String) -> Unit) {
+
+    var onItemClicked by remember{ mutableStateOf("") }
+
+    LaunchedEffect(onItemClicked){
+        when (onItemClicked) {
+            "My Orders" -> onNavigate("orders_screen")
+            "My Profile" -> onNavigate("profile_screen")
+            "Delivery Address" -> onNavigate("address_screen")
+            "Payment Methods" -> onNavigate("payment_screen")
+            "Contact Us" -> onNavigate("contact_screen")
+            "Help & FAQs" -> onNavigate("help_screen")
+            "Settings" -> onNavigate("settings_screen")
+            "Log Out" -> onNavigate("logout")
+        }
+    }
+
+
+
 
     val drawerItems = listOf(
         Pair(Icons.Default.ShoppingBag, "My Orders"),
@@ -67,7 +92,7 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData) {
         // Profile section
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
-                painter = painterResource(id = R.drawable.dishoffer),
+                painter = painterResource(id = R.drawable.dummy_user),
                 contentDescription = "Profile",
                 modifier = Modifier
                     .size(50.dp)
@@ -95,8 +120,8 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData) {
                 DrawerItem(
                     icon = item.first,
                     text = item.second,
-                    onClick = {
-                        println("Clicked on: ${item.second}") // replace with your logic
+                    onClick = {name ->
+                        onItemClicked = name
                     }
                 )
                 Divider(color = Orange2.copy(alpha = 0.4f))
@@ -111,12 +136,12 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData) {
 fun DrawerItem(
     icon: ImageVector,
     text: String,
-    onClick: () -> Unit
+    onClick: (itemname : String) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clickable { onClick() } // detect click
+            .clickable { onClick(text) } // detect click
             .padding(vertical = 8.dp)
     ) {
         Icon(
