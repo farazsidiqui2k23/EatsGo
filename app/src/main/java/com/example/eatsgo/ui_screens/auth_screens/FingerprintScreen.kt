@@ -59,6 +59,7 @@ fun FingerprintScreen(context: Context,navController: NavController,modifier: Mo
     ) {
         //back press functionality
         Toast.makeText(context, "back pressed", Toast.LENGTH_SHORT).show()
+        navController.popBackStack()
     }
 
 

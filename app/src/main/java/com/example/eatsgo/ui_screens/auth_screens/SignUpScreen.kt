@@ -91,6 +91,7 @@ fun SignUpScreen(authViewModel: AuthViewModel, context: Context, navController: 
     ) {
         //onback functionality
         Toast.makeText(context, "Back Pressed", Toast.LENGTH_SHORT).show()
+        navController.popBackStack()
     }
 }
 

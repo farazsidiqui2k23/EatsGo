@@ -83,6 +83,8 @@ fun ForgetPasswordScreen(
     ) {
         //back btn functionality
         Toast.makeText(context, "button prssed", Toast.LENGTH_SHORT).show()
+        navController.popBackStack()
+
     }
 }
 
