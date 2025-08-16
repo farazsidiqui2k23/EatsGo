@@ -33,6 +33,7 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -111,7 +112,7 @@ fun MainUILayout(modifier: Modifier = Modifier, title: String,changeTitle:String
                     onBack()
                 }) {
                     Icon(
-                        Icons.Default.ArrowBack,
+                        Icons.Default.ArrowBackIosNew,
                         contentDescription = "",
                         modifier = Modifier.size(30.dp),
                         tint = OrangeBase
