@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.eatsgo.Firebase.userData
@@ -103,12 +104,14 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData,onNav
                 Text(
                     userData.name,
                     color = Cream,
-                    fontFamily = FontFamily(Font(R.font.poppins_semi_bold)),
-                    fontSize = 18.sp
+                    fontFamily = FontFamily(Font(R.font.poppins_semi_bold)), maxLines = 1,
+                    fontSize = 18.sp, overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     userData.email, color = Cream, fontSize = 12.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular)), maxLines = 1
+                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
