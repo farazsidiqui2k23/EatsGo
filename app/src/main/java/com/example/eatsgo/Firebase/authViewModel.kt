@@ -13,11 +13,11 @@ class AuthViewModel : ViewModel() {
     val auth: FirebaseAuth = FirebaseAuth.getInstance()
     val database = FirebaseDatabase.getInstance().getReference("users")
 
-    val _authState = MutableLiveData<AuthState<Nothing>>()
+    private val _authState = MutableLiveData<AuthState<Nothing>>()
     val authState: LiveData<AuthState<Nothing>> = _authState
 
 
-    val _realtimeDB = MutableLiveData<RealtimeDB>()
+    private val _realtimeDB = MutableLiveData<RealtimeDB>()
     val realtimeDB : LiveData<RealtimeDB> = _realtimeDB
 
     init {
