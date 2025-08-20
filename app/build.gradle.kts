@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
+
+
 }
 
 android {
@@ -71,6 +73,15 @@ dependencies {
 
     // Jetpack Compose navigation integration
     implementation(libs.androidx.navigation.compose)
+
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.36.0")
+
+    //coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
 }
