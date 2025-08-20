@@ -7,5 +7,7 @@ data class Restaurant(
     val items: List<Item>,
     val deals: List<Deal>,
     val location: String,
-    val rating: Double
+    val rating: Double,
+    val has_top_deal: Boolean,
+    val top_deal: TopDeal
 )
