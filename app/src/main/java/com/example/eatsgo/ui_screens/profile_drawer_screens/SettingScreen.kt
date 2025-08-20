@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
@@ -33,16 +34,15 @@ import com.example.eatsgo.ui_screens.MainUILayout
 
 
 @Composable
-fun SettingScreen(modifier: Modifier = Modifier) {
+fun SettingScreen(modifier: Modifier = Modifier, navController: NavController) {
     MainUILayout(
         modifier = modifier,
-        title = "My Orders",
-        changeTitle = "My Orders",
+        title = "Settings",
+        changeTitle = "Settings",
         content = { SettingCardLayout(modifier) },
 
         ) {
-        println("Back Pressed")
-//        navController.popBackStack()
+        navController.popBackStack()
     }
 
 
@@ -94,8 +94,3 @@ fun SettingItem(title: String, subtitle: String) {
     }
 }
 
-@Preview
-@Composable
-private fun UI() {
-    SettingScreen()
-}

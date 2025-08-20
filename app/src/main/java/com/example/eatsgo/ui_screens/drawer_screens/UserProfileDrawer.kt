@@ -60,11 +60,9 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData,onNav
 
     LaunchedEffect(onItemClicked){
         when (onItemClicked) {
-            "My Orders" -> onNavigate("orders_screen")
             "My Profile" -> onNavigate("profile_screen")
             "Delivery Address" -> onNavigate("address_screen")
             "Payment Methods" -> onNavigate("payment_screen")
-            "Contact Us" -> onNavigate("contact_screen")
             "Help & FAQs" -> onNavigate("help_screen")
             "Settings" -> onNavigate("settings_screen")
             "Log Out" -> onNavigate("logout")
@@ -75,11 +73,9 @@ fun ProfileDrawerContent(modifier: Modifier = Modifier, userData: userData,onNav
 
 
     val drawerItems = listOf(
-        Pair(Icons.Default.ShoppingBag, "My Orders"),
         Pair(Icons.Default.Person, "My Profile"),
         Pair(Icons.Default.Home, "Delivery Address"),
         Pair(Icons.Default.Payment, "Payment Methods"),
-        Pair(Icons.Default.Call, "Contact Us"),
         Pair(Icons.Default.Help, "Help & FAQs"),
         Pair(Icons.Default.Settings, "Settings"),
         Pair(Icons.Default.ExitToApp, "Log Out")

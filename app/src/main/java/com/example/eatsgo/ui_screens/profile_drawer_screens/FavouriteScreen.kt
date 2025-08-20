@@ -190,8 +190,4 @@ data class FoodItem(
     val isFavorite: Boolean = false
 )
 
-@Preview(apiLevel = 34, showSystemUi = true, device = "id:pixel_8_pro")
-@Composable
-private fun UI() {
-    FavouriteScreen()
-}
+

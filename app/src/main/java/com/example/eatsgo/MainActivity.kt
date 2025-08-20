@@ -8,6 +8,7 @@ package com.example.eatsgo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,7 +25,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -33,14 +33,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.eatsgo.Firebase.AuthState
 import com.example.eatsgo.Firebase.AuthViewModel
-import com.example.eatsgo.api.ImageChecking
+import com.example.eatsgo.api_setup.RetrofitInstance
 import com.example.eatsgo.ui.theme.EatsGoTheme
 import com.example.eatsgo.ui_screens.BoardingScreen
-import com.example.eatsgo.ui_screens.HomeScreen
+import com.example.eatsgo.ui_screens.home_screens.HomeScreen
 import com.example.eatsgo.ui_screens.Welcome_scr
 import com.example.eatsgo.ui_screens.auth_screens.LogInScreen
 import com.example.eatsgo.ui_screens.auth_screens.SignUpScreen
@@ -51,14 +52,19 @@ import com.example.eatsgo.ui_screens.profile_drawer_screens.OrderScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.SettingScreen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("CoroutineCreationDuringComposition")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             EatsGoTheme {
-
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     EatsGo(modifier = Modifier.padding(innerPadding), this)
@@ -109,27 +115,27 @@ fun EatsGo(modifier: Modifier = Modifier, context: Context) {
     var alreadySigned by rememberSaveable { mutableStateOf(false) }
 
     when (val state = userState.value) {
-            is AuthState.Authenticated -> {
-                alreadySigned = true
-            }
+        is AuthState.Authenticated -> {
+            alreadySigned = true
+        }
 
-            AuthState.Unauthenticated -> {
-                alreadySigned = false
-            }
+        AuthState.Unauthenticated -> {
+            alreadySigned = false
+        }
 
-            is AuthState.onFailure -> {
-                Toast.makeText(context, state.message.toString(), Toast.LENGTH_SHORT).show()
-            }
+        is AuthState.onFailure -> {
+            Toast.makeText(context, state.message.toString(), Toast.LENGTH_SHORT).show()
+        }
 
         is AuthState.onLoading -> {
             Box(
                 modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) { CircularProgressIndicator() }
-            }
-
-            null -> {}
         }
+
+        null -> {}
+    }
 
 
     println("navhost recompose")

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.Orange2
@@ -42,7 +44,7 @@ import com.example.eatsgo.ui_screens.MainUILayout
 
 
 @Composable
-fun ContactScreen(modifier: Modifier = Modifier) {
+fun ContactScreen(modifier: Modifier = Modifier, navController: NavController) {
     MainUILayout(
         modifier = modifier,
         title = "Contact Us",
@@ -50,8 +52,7 @@ fun ContactScreen(modifier: Modifier = Modifier) {
         content = { ContactCardLayout(modifier) },
 
         ) {
-        println("Back Pressed")
-//        navController.popBackStack()
+        navController.popBackStack()
     }
 }
 
@@ -67,10 +68,11 @@ fun ContactCardLayout(modifier: Modifier = Modifier) {
     )
 
     Card(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)),
-        colors = CardDefaults.cardColors(containerColor = Cream) // Ensure `Cream` is defined
+        colors = CardDefaults.cardColors(containerColor = Cream)
     ) {
         LazyColumn(
             modifier = Modifier.padding(16.dp),
@@ -121,8 +123,3 @@ fun CardItem(icon: ImageVector, title: String) {
     }
 }
 
-@Preview(apiLevel = 34, showSystemUi = true)
-@Composable
-private fun UI() {
-    ContactScreen()
-}

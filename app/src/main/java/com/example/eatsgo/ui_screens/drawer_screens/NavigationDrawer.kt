@@ -72,7 +72,6 @@ fun NavigationDrawerScreen(
 
                     2 -> {
                         ProfileDrawerContent(modifier, userData) { navigateTo ->
-                            println("navigate to order")
                             navController.navigate(navigateTo)
                         }
                     }

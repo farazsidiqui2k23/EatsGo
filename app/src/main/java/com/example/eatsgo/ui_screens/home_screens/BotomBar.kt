@@ -1,6 +1,7 @@
-package com.example.eatsgo.ui_screens
+package com.example.eatsgo.ui_screens.home_screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,14 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.OrangeBase
 
 @Composable
-fun BotomBar(modifier: Modifier = Modifier, BydefaultLoc: Int) {
+fun BotomBar(modifier: Modifier = Modifier, onClick: (icon_index: Int) -> Unit) {
     val items = (0..3).toList()
     val bar_icons = mutableListOf(
         R.drawable.home_icon,
@@ -40,7 +40,8 @@ fun BotomBar(modifier: Modifier = Modifier, BydefaultLoc: Int) {
         R.drawable.suppport_icon
     )
 
-    var selectedItem by rememberSaveable { mutableStateOf(BydefaultLoc) }
+    var selectedItem by rememberSaveable { mutableStateOf(0) }
+    onClick(selectedItem)
 
     Box(contentAlignment = Alignment.BottomCenter, modifier = modifier.fillMaxHeight()) {
         Card(

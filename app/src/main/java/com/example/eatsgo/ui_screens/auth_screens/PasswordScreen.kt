@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@file:OptIn(
+    ExperimentalFoundationApi::class, ExperimentalLayoutApi::class,
+    ExperimentalLayoutApi::class
+)
 
 package com.example.eatsgo.ui_screens.auth_screens
 

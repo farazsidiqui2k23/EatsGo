@@ -197,9 +197,3 @@ data class OrderItem(
     val itemsCount: String
 )
 
-
-@Preview(apiLevel = 34, showSystemUi = true, device = "id:pixel_8_pro")
-@Composable
-private fun UI() {
-//    OrderScreen()
-}

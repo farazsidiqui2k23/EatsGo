@@ -34,16 +34,15 @@ import com.example.eatsgo.ui.theme.OrangeBase
 
 
 @Composable
-fun HelpScreen(modifier: Modifier = Modifier) {
+fun HelpScreen(modifier: Modifier = Modifier, navController: NavController) {
     MainUILayout(
         modifier = modifier,
-        title = "My Orders",
-        changeTitle = "My Orders",
+        title = "Help",
+        changeTitle = "Help",
         content = { SupportCardLayout(modifier) },
 
         ) {
-        println("Back Pressed")
-//        navController.popBackStack()
+        navController.popBackStack()
     }
 
 
