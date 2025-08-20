@@ -16,7 +16,7 @@ class ResataurantViewModel : ViewModel() {
         MutableStateFlow<RestaurantDataState<EatsGoResponse>>(RestaurantDataState.onLoading)
     val restaurantState: StateFlow<RestaurantDataState<EatsGoResponse>> = _restaurantState
 
-    fun getRestaurantsData() {
+    init {
         viewModelScope.launch {
             try {
                 val response = eatsGoAPI.getRestaurants()
@@ -33,6 +33,7 @@ class ResataurantViewModel : ViewModel() {
             }
         }
     }
+
 }
 
 sealed class RestaurantDataState<out T> {
