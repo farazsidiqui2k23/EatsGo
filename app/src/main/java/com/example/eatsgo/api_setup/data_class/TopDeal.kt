@@ -6,5 +6,6 @@ data class TopDeal(
     val item: String,
     val desc: String,
     val discount: String,
-    val tagline: String
+    val tagline: String,
+    val price: Int = 2400
 )
