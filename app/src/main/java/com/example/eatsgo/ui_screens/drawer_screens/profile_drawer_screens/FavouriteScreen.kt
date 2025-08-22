@@ -1,4 +1,4 @@
-package com.example.eatsgo.ui_screens.profile_drawer_screens
+package com.example.eatsgo.ui_screens.drawer_screens.profile_drawer_screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

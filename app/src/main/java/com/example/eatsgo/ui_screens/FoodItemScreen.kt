@@ -214,7 +214,7 @@ fun FoodItemScreen(
                             }
                         }
                     }
-
+                    Divider(color = Orange2)
                     Spacer(modifier = Modifier.height(12.dp))
 
                     // 📖 Description
