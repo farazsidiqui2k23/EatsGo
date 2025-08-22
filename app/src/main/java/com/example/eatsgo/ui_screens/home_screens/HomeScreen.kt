@@ -2,7 +2,14 @@
 
 package com.example.eatsgo.ui_screens.home_screens
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -82,13 +89,20 @@ import com.example.eatsgo.ui.theme.Yellow2
 import com.example.eatsgo.ui.theme.YellowBase
 import com.example.eatsgo.ui_screens.drawer_screens.NavigationDrawerScreen
 import com.example.eatsgo.ui_screens.drawer_screens.noRippleClickable
+import com.example.eatsgo.ui_screens.home_screens.home.MenuCard
+import com.example.eatsgo.ui_screens.home_screens.home.RestaurantCard
+import com.example.eatsgo.ui_screens.home_screens.home.TopDeals
 import com.example.eatsgo.ui_screens.profile_drawer_screens.ContactScreen
+import com.example.eatsgo.ui_screens.profile_drawer_screens.FavouriteScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.OrderScreen
+import kotlinx.coroutines.delay
 
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
-
+fun HomeScreen(
+    modifier: Modifier = Modifier, navController: NavController,
+    restaurantClick: (restaurant: Restaurant) -> Unit, onTopDealClicked: (topDeal: TopDeal) -> Unit
+) {
 
     var whichDrawer by rememberSaveable { mutableIntStateOf(0) }
     var drawerState by rememberSaveable { mutableStateOf(false) }
@@ -156,7 +170,12 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
         when (bottomBarItem) {
             0 -> {
                 eatsGoAppData?.let {
-                    MainHomePage(modifier, it) { index, state ->
+                    MainHomePage(
+                        modifier, it,
+                        restaurantClick = { Click -> restaurantClick(Click) },
+                        navController = navController,
+                        onTopDealClicked = { deal -> onTopDealClicked(deal) }
+                    ) { index, state ->
                         whichDrawer = index
                         drawerState = state
                     }
@@ -182,7 +201,7 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
             }
 
             2 -> {
-                //Favourite
+                FavouriteScreen(modifier, navController)
             }
 
             3 -> {
@@ -192,7 +211,6 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
 
         BotomBar(modifier) { i ->
             bottomBarItem = i
-            println(i)
         }
 
 
@@ -209,7 +227,11 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
 fun MainHomePage(
     modifier: Modifier = Modifier,
     eatsGoAppData: EatsGoAppData,
-    NavigationDrawer: (drawerIndex: Int, drawerState: Boolean) -> Unit
+    navController: NavController,
+    restaurantClick: (restaurant: Restaurant) -> Unit,
+    onTopDealClicked: (topDeal: TopDeal) -> Unit,
+    NavigationDrawer: (drawerIndex: Int, drawerState: Boolean) -> Unit,
+
 ) {
 
 
@@ -242,8 +264,13 @@ fun MainHomePage(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                HomeCardLayout(modifier, eatsGoAppData) { height ->
+                HomeCardLayout(
+                    modifier, eatsGoAppData, navController,
+                    restaurantClick = { click -> restaurantClick(click) },
+                    onTopDealClicked = { deal -> onTopDealClicked(deal) }
+                ) { height ->
                     progress = height.toFloat()
+
                 }
             }
         }
@@ -255,6 +282,9 @@ fun MainHomePage(
 fun HomeCardLayout(
     modifier: Modifier = Modifier,
     appdata: EatsGoAppData,
+    navController: NavController,
+    restaurantClick: (restaurant: Restaurant) -> Unit,
+    onTopDealClicked: (topDeal: TopDeal) -> Unit,
     scrollProgress: (Int) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -262,6 +292,12 @@ fun HomeCardLayout(
     val scrollPx = listState.firstVisibleItemScrollOffset
     val progress = scrollPx / 100
     scrollProgress(progress)
+
+    var seletedMenu by rememberSaveable { mutableStateOf("meal") }
+
+    var restaurant: List<Restaurant> =
+        if (seletedMenu == "meal") appdata.restaurants else appdata.restaurants.filter { it.famous_for == seletedMenu }
+    Log.d("FarazSidd", restaurant.toString())
 
     Card(
         modifier = Modifier
@@ -271,17 +307,31 @@ fun HomeCardLayout(
         shape = RoundedCornerShape(20.dp, 20.dp)
     ) {
         Column() {
-            MenuCard(modifier)
+            MenuCard(modifier, seletedMenu) { menu ->
+                seletedMenu = menu
+            }
             LazyColumn(
                 modifier = Modifier.padding(20.dp, 20.dp, 20.dp, 64.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                item {
-                    Divider(color = Orange2)
-                }
+
+                val topDealRestaurant = restaurant.filter { it.has_top_deal }.take(5)
                 item() {
-                    TopDeals(modifier, appdata.restaurants)
+                    AnimatedVisibility(
+                        visible = if (topDealRestaurant.isNotEmpty()) true else false,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically()
+                    ) {
+                        Divider(color = Orange2)
+
+                        TopDeals(
+                            modifier, navController, topDealRestaurant,
+                            onTopDealClicked = { deal -> onTopDealClicked(deal) }
+                        )
+                    }
+
                 }
+
                 item {
                     Divider(color = Orange2)
                 }
@@ -294,11 +344,14 @@ fun HomeCardLayout(
                     )
                 }
 
-                items(appdata.restaurants) { restaurant ->
-                    Restaurants(
+                items(restaurant) { restaurant ->
+                    RestaurantCard(
                         modifier = modifier,
-                        restaurant = restaurant
-                    )
+                        restaurant = restaurant,
+                        navController = navController
+                    ) { click ->
+                        restaurantClick(click)
+                    }
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
@@ -307,223 +360,4 @@ fun HomeCardLayout(
     }
 }
 
-@Composable
-fun MenuCard(modifier: Modifier = Modifier) {
-
-    val FoodIcons = mutableListOf(
-        R.drawable.burger_icon,
-        R.drawable.meal_icon,
-        R.drawable.pizza_icon,
-        R.drawable.desert_icon,
-        R.drawable.drink_icon
-    )
-
-    val list = (0..4).toList()
-
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp, 12.dp, 12.dp, 0.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        items(list) { index ->
-            IconButton(
-                onClick = {},
-                modifier = Modifier
-                    .size(56.dp, 70.dp)
-                    .background(Yellow2, RoundedCornerShape(20.dp))
-            ) {
-                Icon(
-                    painter = painterResource(id = FoodIcons[index]),
-                    contentDescription = "",
-                    tint = OrangeBase,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun TopDeals(modifier: Modifier = Modifier, restaurant: List<Restaurant>) {
-    val displayedDeal = restaurant.filter { it.has_top_deal }
-        .take(5)
-    val listState = rememberLazyListState()
-    var currentIndex by rememberSaveable { mutableStateOf(0) }
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex }
-            .collect { index ->
-                currentIndex = index
-                println("Now on index $index")
-            }
-    }
-
-    Column {
-        Text(
-            text = "Top Notch Deals",
-            fontSize = 18.sp,
-            fontFamily = FontFamily(Font(R.font.poppins_medium)),
-            color = Brown
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        LazyRow(state = listState, flingBehavior = rememberSnapFlingBehavior(listState)) {
-            items(displayedDeal) { restaurant ->
-
-        Card(
-            modifier = Modifier
-                .padding(end = 4.dp)
-                .width(320.dp)
-                .height(130.dp)
-                .clickable { },
-            colors = CardDefaults.cardColors(OrangeBase)
-
-        ) {
-            Row {
-                Box(modifier = Modifier.weight(1f)) {
-                    //ofer desc
-                    Icon(
-                        painter = painterResource(R.drawable.hole_circle),
-                        contentDescription = "",
-                        tint = YellowBase,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .offset(x = 120.dp, y = -30.dp)
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.hole_circle),
-                        contentDescription = "",
-                        tint = YellowBase,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .offset(x = -20.dp, y = 100.dp)
-                    )
-                    Column(
-                        modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = "Experience our",
-                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                            fontSize = 14.sp,
-                            color = Cream
-                        )
-                        Text(
-                            text = "delicious new deal",
-                            fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                            fontSize = 14.sp,
-                            color = Cream,
-                            modifier = Modifier.offset(x = 0.dp, y = -8.dp)
-                        )
-                        Text(
-                            text = "${restaurant.top_deal.discount} OFF",
-                            fontFamily = FontFamily(Font(R.font.poppins_bold)),
-                            fontSize = 28.sp,
-                            color = Cream
-                        )
-
-
-                    }
-                }
-                Box(modifier = Modifier.weight(1f)) {
-                    // image
-                    Image(
-                        painter = painterResource(id = R.drawable.dishoffer),
-                        contentDescription = "Deals Image",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-                }
-            }
-        }
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            LazyRow(modifier = Modifier.padding(0.dp, 14.dp)) {
-                items(displayedDeal.size) { index ->
-                    Box(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .height(8.dp)
-                            .width(24.dp)
-                            .clip(CircleShape)
-                            .background(if (index == currentIndex) OrangeBase else Yellow2)
-
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun Restaurants(modifier: Modifier = Modifier, restaurant: Restaurant) {
-
-    Column {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp), colors = CardDefaults.cardColors(
-                OrangeBase
-            )
-        ) {
-            Image(
-                painter = painterResource(R.drawable.dish),
-                contentDescription = "Dummy Img",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-        Text(
-            text = restaurant.name,
-            fontSize = 20.sp,
-            fontFamily = FontFamily(Font(R.font.poppins_semi_bold)),
-            color = Brown
-        )
-        LazyRow() {
-            items(restaurant.items) { item ->
-                Text(
-                    text = "- ${item.name}",
-                    fontSize = 12.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                    color = YellowBase
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(.8f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Icon(Icons.Default.Star, contentDescription = "Rating", tint = OrangeBase)
-            Text(
-                text = restaurant.rating.toString(),
-                fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                fontSize = 16.sp,
-                color = Brown
-            )
-            Icon(
-                Icons.Default.DeliveryDining,
-                contentDescription = "Delivery",
-                tint = OrangeBase
-            )
-            Text(
-                text = "Free",
-                fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                fontSize = 16.sp,
-                color = Brown
-            )
-            Icon(Icons.Default.AccessTimeFilled, contentDescription = "Time", tint = OrangeBase)
-            Text(
-                text = "10 min",
-                fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                fontSize = 16.sp,
-                color = Brown
-            )
-        }
-    }
-
-
-}
 

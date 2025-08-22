@@ -50,6 +50,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.eatsgo.R
 import com.example.eatsgo.api_setup.data_class.Deal
+import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.Orange2
 import com.example.eatsgo.ui.theme.OrangeBase
@@ -223,10 +224,14 @@ fun DealScreen(
                             .padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Total Amount", fontFamily = FontFamily(Font(R.font.poppins_bold)))
+                        Text(
+                            "Total Amount",
+                            fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                            color = Brown
+                        )
                         Text(
                             "$totalAmount Rs.",
-                            color = Color.Black,
+                            color = Brown,
                             fontFamily = FontFamily(Font(R.font.poppins_bold))
                         )
                     }
@@ -236,7 +241,11 @@ fun DealScreen(
                             .padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Discounted (5%)", fontFamily = FontFamily(Font(R.font.poppins_bold)))
+                        Text(
+                            "Discounted (5%)",
+                            fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                            color = Brown
+                        )
                         Text(
                             "${"%.2f".format(discountedAmount)} Rs.",
                             color = OrangeBase,

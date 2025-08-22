@@ -51,10 +51,14 @@ import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
 import com.example.eatsgo.ui.theme.OrangeBase
+import com.example.eatsgo.ui_screens.getGreetingAndTagline
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TopBar(modifier: Modifier = Modifier, navDrawer: (itemIndex: Int, itemState: Boolean) -> Unit) {
+
+    val (headline, tagline) = getGreetingAndTagline()
 
     val search = rememberTextFieldState()
 
@@ -155,13 +159,13 @@ fun TopBar(modifier: Modifier = Modifier, navDrawer: (itemIndex: Int, itemState:
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Good Morning",
+            text = headline,
             fontSize = 28.sp,
             color = Cream,
             fontFamily = FontFamily(Font(R.font.poppins_bold))
         )
         Text(
-            text = "Risi And Shine! It's Breakfast Time",
+            text = tagline,
             fontSize = 16.sp,
             color = OrangeBase,
             fontFamily = FontFamily(Font(R.font.poppins_regular))

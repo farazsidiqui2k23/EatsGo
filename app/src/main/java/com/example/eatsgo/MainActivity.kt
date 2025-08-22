@@ -8,7 +8,6 @@ package com.example.eatsgo
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -33,28 +33,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.eatsgo.Firebase.AuthState
 import com.example.eatsgo.Firebase.AuthViewModel
-import com.example.eatsgo.api_setup.RetrofitInstance
+import com.example.eatsgo.api_setup.data_class.Deal
+import com.example.eatsgo.api_setup.data_class.Item
+import com.example.eatsgo.api_setup.data_class.Restaurant
+import com.example.eatsgo.api_setup.data_class.TopDeal
 import com.example.eatsgo.ui.theme.EatsGoTheme
+import com.example.eatsgo.ui.theme.OrangeBase
+import com.example.eatsgo.ui.theme.YellowBase
 import com.example.eatsgo.ui_screens.BoardingScreen
-import com.example.eatsgo.ui_screens.home_screens.HomeScreen
+import com.example.eatsgo.ui_screens.DealScreen
+import com.example.eatsgo.ui_screens.FoodItemScreen
+import com.example.eatsgo.ui_screens.RestaurantScreen
 import com.example.eatsgo.ui_screens.Welcome_scr
 import com.example.eatsgo.ui_screens.auth_screens.LogInScreen
 import com.example.eatsgo.ui_screens.auth_screens.SignUpScreen
+import com.example.eatsgo.ui_screens.home_screens.HomeScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.ContactScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.HelpScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.MyProfileScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.OrderScreen
 import com.example.eatsgo.ui_screens.profile_drawer_screens.SettingScreen
+import com.example.yourapp.ui.screens.TopDealScreen
+
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 class MainActivity : ComponentActivity() {
@@ -107,6 +114,16 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun EatsGo(modifier: Modifier = Modifier, context: Context) {
 
+    val systemUIcontroller = rememberSystemUiController()
+    val statusBarColor = YellowBase
+
+    SideEffect {
+        systemUIcontroller.setSystemBarsColor(
+            color = statusBarColor,
+            darkIcons = false
+        )
+    }
+
     val navController = rememberNavController()
 
     val authViewModel = viewModel<AuthViewModel>()
@@ -137,6 +154,12 @@ fun EatsGo(modifier: Modifier = Modifier, context: Context) {
         null -> {}
     }
 
+    var clickedRestaurant: Restaurant? by rememberSaveable { mutableStateOf(null) }
+    var clickedPersonItem: Item? by rememberSaveable { mutableStateOf(null) }
+    var clickedDealItem: Deal? by rememberSaveable { mutableStateOf(null) }
+    var clickedTopDeal: TopDeal? by rememberSaveable { mutableStateOf(null) }
+
+    println(clickedTopDeal)
 
     println("navhost recompose")
 
@@ -160,7 +183,11 @@ fun EatsGo(modifier: Modifier = Modifier, context: Context) {
             LogInScreen(context, authViewModel, navController, modifier)
         }
         composable("HomeScreen") {
-            HomeScreen(modifier, navController)
+            HomeScreen(
+                modifier, navController,
+                restaurantClick = { restaurantData -> clickedRestaurant = restaurantData },
+                onTopDealClicked = { topdeal -> clickedTopDeal = topdeal },
+            )
         }
         composable("orders_screen",
             enterTransition = {
@@ -199,6 +226,39 @@ fun EatsGo(modifier: Modifier = Modifier, context: Context) {
         composable("logout") {
             authViewModel.UserSignOut()
         }
+        composable("RestaurantScreen") {
+            clickedRestaurant?.let { it1 ->
+                RestaurantScreen(
+                    modifier, it1, navController,
+                    onItemClicked = { item -> clickedPersonItem = item },
+                    onDealClicked = { dealitem -> clickedDealItem = dealitem }
+                )
+            }
+        }
+        composable("FoodItemScreen") {
+            clickedPersonItem?.let { it1 ->
+                FoodItemScreen(
+                    modifier,
+                    foodItem = it1,
+                    navController = navController,
+                )
+            }
+        }
+
+        composable("DealItemScreen") {
+            clickedDealItem?.let { it1 -> DealScreen(modifier, it1, navController) }
+        }
+
+        composable("TopDealScreen") {
+            clickedTopDeal?.let { it1 ->
+                TopDealScreen(
+                    modifier = modifier,
+                    topDeal = it1,
+                    navController = navController
+                )
+            }
+        }
+
 
     }
 }

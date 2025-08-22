@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.eatsgo.R
 import com.example.eatsgo.ui.theme.Brown
 import com.example.eatsgo.ui.theme.Cream
@@ -39,7 +40,7 @@ val dummyFoodList = listOf(
 )
 
 @Composable
-fun FavouriteScreen(modifier: Modifier = Modifier) {
+fun FavouriteScreen(modifier: Modifier = Modifier, navController: NavController) {
     MainUILayout(
         modifier = modifier,
         title = "Favourite",
@@ -47,7 +48,7 @@ fun FavouriteScreen(modifier: Modifier = Modifier) {
         content = { FavouriteCardLayout(items = dummyFoodList) },
     ) {
         println("Back Pressed")
-        // navController.popBackStack()
+        navController.popBackStack()
     }
 }
 

@@ -129,7 +129,7 @@ fun MainUILayout(modifier: Modifier = Modifier, title: String,changeTitle:String
             }
             Box(modifier = Modifier
                 .fillMaxSize()
-                .border(1.dp, Color.Red)){
+            ) {
                 content()
             }
         }

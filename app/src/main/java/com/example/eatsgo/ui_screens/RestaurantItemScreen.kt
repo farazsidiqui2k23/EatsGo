@@ -2,6 +2,7 @@ package com.example.eatsgo.ui_screens
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -41,13 +43,23 @@ import com.example.eatsgo.ui.theme.OrangeBase
 fun RestaurantScreen(
     modifier: Modifier = Modifier,
     restaurant: Restaurant,
-    navController: NavController
-) {
+    navController: NavController,
+    onItemClicked: (item: Item) -> Unit,
+    onDealClicked: (dealItem: Deal) -> Unit,
+
+
+    ) {
     MainUILayout(
         modifier = modifier,
         title = restaurant.name,
         changeTitle = restaurant.name,
-        content = { RestaurantCardLayout(restaurant, modifier) },
+        content = {
+            RestaurantCardLayout(
+                restaurant, modifier, navController,
+                onItemClicked = { item -> onItemClicked(item) },
+                onDealClicked = { dealitem -> onDealClicked(dealitem) }
+            )
+        },
     ) {
         navController.popBackStack()
     }
@@ -58,6 +70,9 @@ fun RestaurantScreen(
 fun RestaurantCardLayout(
     restaurant: Restaurant,
     modifier: Modifier = Modifier,
+    navController: NavController,
+    onItemClicked: (item: Item) -> Unit,
+    onDealClicked: (dealItem: Deal) -> Unit,
 ) {
 
     val restaurantItem = restaurant.items
@@ -99,7 +114,11 @@ fun RestaurantCardLayout(
                 }
 
                 items(dealItem) { dealItem ->
-                    DealCard(modifier, dealItem)
+                    DealCard(
+                        modifier,
+                        dealItem,
+                        navController
+                    ) { dealitem -> onDealClicked(dealitem) }
                 }
                 item {
                     Text(
@@ -119,8 +138,10 @@ fun RestaurantCardLayout(
                         rowItems.forEach { item ->
                             ItemCard(
                                 item = item,
-                                modifier = Modifier.weight(1f)
-                            )
+                                modifier = Modifier.weight(1f), navController = navController
+                            ) { item ->
+                                onItemClicked(item)
+                            }
                         }
                         if (rowItems.size == 1) {
                             Spacer(modifier = Modifier.weight(1f))
@@ -135,11 +156,16 @@ fun RestaurantCardLayout(
 @Composable
 fun ItemCard(
     modifier: Modifier = Modifier,
-    item: Item
+    item: Item,
+    navController: NavController,
+    onItemClicked: (item: Item) -> Unit
 ) {
 
     Card(
-        modifier = modifier,
+        modifier = modifier.clickable {
+            onItemClicked(item)
+            navController.navigate("FoodItemScreen")
+        },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -189,10 +215,15 @@ fun ItemCard(
 @Composable
 fun DealCard(
     modifier: Modifier = Modifier,
-    item: Deal
+    item: Deal,
+    navController: NavController,
+    onDealClicked: (dealItem: Deal) -> Unit
 ) {
-
     Card(
+        modifier = Modifier.clickable {
+            onDealClicked(item)
+            navController.navigate("DealItemScreen")
+        },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -226,15 +257,21 @@ fun DealCard(
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(Modifier.height(4.dp))
-            Text(
-                text = item.deal_name,
-                fontSize = 13.sp,
-                color = Brown,
-                minLines = 2,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                lineHeight = 16.sp
-            )
+            LazyRow {
+                items(item.deal_items) { dealItem ->
+                    Text(
+                        text = " - ${dealItem.name}",
+                        fontSize = 13.sp,
+                        color = Brown,
+                        minLines = 2,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        lineHeight = 16.sp
+                    )
+                }
+
+            }
+
         }
     }
 }
